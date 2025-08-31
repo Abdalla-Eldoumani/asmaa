@@ -480,28 +480,3 @@ function checkDailyName() {
 window.studyName = studyName;
 window.playName = playName;
 window.startQuiz = startQuiz;
-
-function createNameCard(name) {
-    const card = document.createElement('div');
-    card.className = 'name-card';
-    card.innerHTML = `
-        <div class="name-number">${name.number}</div>
-        <div class="name-arabic arabic-text">${name.arabic}</div>
-        <div class="name-transliteration">${name.transliteration}</div>
-        <div class="name-meaning">${name.meaning[appState.currentLang]}</div>
-        <div class="name-actions">
-            <button class="btn-action btn-study" data-index="${name.number - 1}">Study</button>
-            <button class="btn-action btn-play" data-arabic="${name.arabic}">🔊</button>
-        </div>
-    `;
-    
-    card.querySelector('.btn-study').addEventListener('click', (e) => {
-        studyName(parseInt(e.target.dataset.index));
-    });
-    
-    card.querySelector('.btn-play').addEventListener('click', (e) => {
-        playName(e.target.dataset.arabic);
-    });
-    
-    return card;
-}
