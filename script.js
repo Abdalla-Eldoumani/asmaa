@@ -52,7 +52,12 @@ const translations = {
         unfavoriteButton: '💔',
         favorites: 'Favorite Names',
         noFavorites: 'No favorite names yet',
-        startNewQuiz: 'Start New Quiz'
+        startNewQuiz: 'Start New Quiz',
+        questionsFormat: 'Question {current} of {total}',
+        perfectScore: '🌟 Perfect! Masha\'Allah! 🌟',
+        excellentScore: '✨ Excellent work! ✨',
+        goodScore: '👍 Good job! Keep learning!',
+        keepPracticing: '📚 Keep practicing, you\'ll improve!'
     },
     ar: {
         browse: 'تصفح',
@@ -80,7 +85,12 @@ const translations = {
         unfavoriteButton: '💔',
         favorites: 'الأسماء المفضلة',
         noFavorites: 'لا توجد أسماء مفضلة بعد',
-        startNewQuiz: 'ابدأ اختبار جديد'
+        startNewQuiz: 'ابدأ اختبار جديد',
+        questionsFormat: 'السؤال {current} من {total}',
+        perfectScore: '🌟 ممتاز! ماشاء الله! 🌟',
+        excellentScore: '✨ عمل ممتاز! ✨',
+        goodScore: '👍 عمل جيد! استمر في التعلم!',
+        keepPracticing: '📚 استمر في الممارسة، ستتحسن!'
     },
     fr: {
         browse: 'Parcourir',
@@ -108,7 +118,12 @@ const translations = {
         unfavoriteButton: '💔',
         favorites: 'Noms Favoris',
         noFavorites: 'Pas encore de noms favoris',
-        startNewQuiz: 'Commencer un Nouveau Quiz'
+        startNewQuiz: 'Commencer un Nouveau Quiz',
+        questionsFormat: 'Question {current} sur {total}',
+        perfectScore: '🌟 Parfait! Masha\'Allah! 🌟',
+        excellentScore: '✨ Excellent travail! ✨',
+        goodScore: '👍 Bon travail! Continuez à apprendre!',
+        keepPracticing: '📚 Continuez à pratiquer, vous vous améliorerez!'
     }
 };
 
@@ -555,13 +570,22 @@ function renderQuizQuestion() {
     const q = appState.quizData.questions[appState.quizData.currentQuestion];
     const t = translations[appState.currentLang];
     
-    document.getElementById('currentQuestion').textContent = appState.quizData.currentQuestion + 1;
-    document.getElementById('totalQuestions').textContent = appState.quizData.questions.length;
+    // Update question counter with proper translation
+    const questionCounterText = t.questionsFormat
+        .replace('{current}', appState.quizData.currentQuestion + 1)
+        .replace('{total}', appState.quizData.questions.length);
+    document.getElementById('questionCounter').innerHTML = questionCounterText;
+    
     document.getElementById('quizProgress').style.width = 
         `${((appState.quizData.currentQuestion + 1) / appState.quizData.questions.length) * 100}%`;
     
     document.getElementById('quizQuestion').textContent = t.whatIsTheMeaning;
-    document.getElementById('quizArabic').textContent = q.name.arabic;
+    
+    // Add transliteration for better pronunciation guidance
+    document.getElementById('quizArabic').innerHTML = `
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">${q.name.arabic}</div>
+        <div style="font-size: 1rem; color: var(--text-secondary); font-style: italic;">${q.name.transliteration}</div>
+    `;
     
     const optionsContainer = document.getElementById('quizOptions');
     optionsContainer.innerHTML = '';
@@ -613,13 +637,13 @@ function showQuizResults() {
     const percentage = Math.round((appState.quizData.score / appState.quizData.questions.length) * 100);
     let message = '';
     if (percentage === 100) {
-        message = '🌟 Perfect! Masha\'Allah! 🌟';
+        message = t.perfectScore;
     } else if (percentage >= 80) {
-        message = '✨ Excellent work! ✨';
+        message = t.excellentScore;
     } else if (percentage >= 60) {
-        message = '👍 Good job! Keep learning!';
+        message = t.goodScore;
     } else {
-        message = '📚 Keep practicing, you\'ll improve!';
+        message = t.keepPracticing;
     }
     
     document.querySelector('.quiz-card').innerHTML = `
@@ -632,14 +656,25 @@ function showQuizResults() {
                 <div class="quiz-percentage">${percentage}%</div>
             </div>
             <p style="font-size: 1.3rem; color: var(--text-secondary); margin: 1rem 0;">${message}</p>
-            <button class="btn-nav" onclick="startQuiz()" style="margin-top: 2rem;">${t.startNewQuiz}</button>
+            <button class="btn-nav" id="restartQuizBtn" style="margin-top: 2rem;">${t.startNewQuiz}</button>
         </div>
     `;
+    
+    // Add event listener for restart button
+    document.getElementById('restartQuizBtn').addEventListener('click', () => {
+        startQuiz();
+    });
 }
 
 // Render enhanced progress view
 function renderProgress() {
     const t = translations[appState.currentLang];
+    
+    // Update stat labels with translated text
+    document.getElementById('learnedLabel').textContent = t.learned;
+    document.getElementById('streakLabel').textContent = t.streak;
+    document.getElementById('accuracyLabel').textContent = t.accuracy;
+    document.getElementById('quizzesLabel').textContent = t.quizzesTaken;
     
     document.getElementById('totalLearned').textContent = appState.progress.learned.length;
     document.getElementById('currentStreak').textContent = appState.progress.dailyStreak;
