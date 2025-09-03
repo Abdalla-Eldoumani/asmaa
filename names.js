@@ -1,7 +1,8 @@
 export const namesData = [
     {
         number: 1,
-        arabic: "الرَّحْمَنُ",
+        arabic: "ٱلرَّحۡمَٰنُ",
+        arabicPronunciation: "الرَّحْمَانُ",
         transliteration: "Ar-Rahman",
         meaning: {
             en: "The Most Merciful",
@@ -16,7 +17,8 @@ export const namesData = [
     },
     {
         number: 2,
-        arabic: "الرَّحِيمُ",
+        arabic: "ٱلرَّحِيمُ",
+        arabicPronunciation: "الرَّحِيمُ",
         transliteration: "Ar-Raheem",
         meaning: {
             en: "The Most Compassionate",
@@ -31,7 +33,8 @@ export const namesData = [
     },
     {
         number: 3,
-        arabic: "الْمَلِكُ",
+        arabic: "ٱلۡمَلِكُ",
+        arabicPronunciation: "الْمَلِكُ",
         transliteration: "Al-Malik",
         meaning: {
             en: "The King",
@@ -46,7 +49,8 @@ export const namesData = [
     },
     {
         number: 4,
-        arabic: "الْقُدُّوسُ",
+        arabic: "ٱلۡقُدُّوسُ",
+        arabicPronunciation: "الْقُدُّوسُ",
         transliteration: "Al-Quddus",
         meaning: {
             en: "The Most Sacred",
@@ -61,7 +65,8 @@ export const namesData = [
     },
     {
         number: 5,
-        arabic: "السَّلَامُ",
+        arabic: "ٱلسَّلَٰمُ",
+        arabicPronunciation: "السَّلَامُ",
         transliteration: "As-Salam",
         meaning: {
             en: "The Source of Peace",
@@ -76,7 +81,8 @@ export const namesData = [
     },
     {
         number: 6,
-        arabic: "الْمُؤْمِنُ",
+        arabic: "ٱلۡمُؤۡمِنُ",
+        arabicPronunciation: "الْمُؤْمِنُ",
         transliteration: "Al-Mu'min",
         meaning: {
             en: "The Guardian of Faith",
@@ -91,7 +97,8 @@ export const namesData = [
     },
     {
         number: 7,
-        arabic: "الْمُهَيْمِنُ",
+        arabic: "ٱلۡمُهَيۡمِنُ",
+        arabicPronunciation: "الْمُهَيْمِنُ",
         transliteration: "Al-Muhaymin",
         meaning: {
             en: "The Protector",
@@ -106,7 +113,8 @@ export const namesData = [
     },
     {
         number: 8,
-        arabic: "الْعَزِيزُ",
+        arabic: "ٱلۡعَزِيزُ",
+        arabicPronunciation: "الْعَزِيزُ",
         transliteration: "Al-Aziz",
         meaning: {
             en: "The Almighty",
@@ -121,7 +129,8 @@ export const namesData = [
     },
     {
         number: 9,
-        arabic: "الْجَبَّارُ",
+        arabic: "ٱلۡجَبَّارُ",
+        arabicPronunciation: "الْجَبَّارُ",
         transliteration: "Al-Jabbar",
         meaning: {
             en: "The Compeller",
@@ -136,7 +145,8 @@ export const namesData = [
     },
     {
         number: 10,
-        arabic: "الْمُتَكَبِّرُ",
+        arabic: "ٱلۡمُتَكَبِّرُ",
+        arabicPronunciation: "الْمُتَكَبِّرُ",
         transliteration: "Al-Mutakabbir",
         meaning: {
             en: "The Supreme",
@@ -151,7 +161,8 @@ export const namesData = [
     },
     {
         number: 11,
-        arabic: "الْخَالِقُ",
+        arabic: "ٱلۡخَٰلِقُ",
+        arabicPronunciation: "الْخَالِقُ",
         transliteration: "Al-Khaliq",
         meaning: {
             en: "The Creator",
@@ -166,7 +177,8 @@ export const namesData = [
     },
     {
         number: 12,
-        arabic: "الْبَارِئُ",
+        arabic: "ٱلۡبَارِئُ",
+        arabicPronunciation: "الْبَارِئُ",
         transliteration: "Al-Bari'",
         meaning: {
             en: "The Evolver",
@@ -181,7 +193,8 @@ export const namesData = [
     },
     {
         number: 13,
-        arabic: "الْمُصَوِّرُ",
+        arabic: "ٱلۡمُصَوِّرُ",
+        arabicPronunciation: "الْمُصَوِّرُ",
         transliteration: "Al-Musawwir",
         meaning: {
             en: "The Fashioner",
@@ -196,7 +209,8 @@ export const namesData = [
     },
     {
         number: 14,
-        arabic: "الْغَفَّارُ",
+        arabic: "ٱلۡغَفَّٰرُ",
+        arabicPronunciation: "الْغَفَّارُ",
         transliteration: "Al-Ghaffar",
         meaning: {
             en: "The Great Forgiver",
@@ -211,7 +225,8 @@ export const namesData = [
     },
     {
         number: 15,
-        arabic: "الْقَهَّارُ",
+        arabic: "ٱلۡقَهَّارُ",
+        arabicPronunciation: "الْقَهَّارُ",
         transliteration: "Al-Qahhar",
         meaning: {
             en: "The Subduer",
@@ -226,7 +241,8 @@ export const namesData = [
     },
     {
         number: 16,
-        arabic: "الْوَهَّابُ",
+        arabic: "ٱلۡوَهَّابُ",
+        arabicPronunciation: "الْوَهَّابُ",
         transliteration: "Al-Wahhab",
         meaning: {
             en: "The Bestower",
@@ -241,7 +257,8 @@ export const namesData = [
     },
     {
         number: 17,
-        arabic: "الرَّزَّاقُ",
+        arabic: "ٱلرَّزَّاقُ",
+        arabicPronunciation: "الرَّزَّاقُ",
         transliteration: "Ar-Razzaq",
         meaning: {
             en: "The Provider",
@@ -256,7 +273,8 @@ export const namesData = [
     },
     {
         number: 18,
-        arabic: "الْفَتَّاحُ",
+        arabic: "ٱلۡفَتَّاحُ",
+        arabicPronunciation: "الْفَتَّاحُ",
         transliteration: "Al-Fattah",
         meaning: {
             en: "The Opener",
@@ -271,7 +289,8 @@ export const namesData = [
     },
     {
         number: 19,
-        arabic: "الْعَلِيمُ",
+        arabic: "ٱلۡعَلِيمُ",
+        arabicPronunciation: "الْعَلِيمُ",
         transliteration: "Al-'Aleem",
         meaning: {
             en: "The All-Knowing",
@@ -286,7 +305,8 @@ export const namesData = [
     },
     {
         number: 20,
-        arabic: "الْقَابِضُ",
+        arabic: "ٱلۡقَابِضُ",
+        arabicPronunciation: "الْقَابِضُ",
         transliteration: "Al-Qabid",
         meaning: {
             en: "The Withholder",
@@ -301,7 +321,8 @@ export const namesData = [
     },
     {
         number: 21,
-        arabic: "الْبَاسِطُ",
+        arabic: "ٱلۡبَاسِطُ",
+        arabicPronunciation: "الْبَاسِطُ",
         transliteration: "Al-Basit",
         meaning: {
             en: "The Expander",
@@ -316,7 +337,8 @@ export const namesData = [
     },
     {
         number: 22,
-        arabic: "الْخَافِضُ",
+        arabic: "ٱلۡخَافِضُ",
+        arabicPronunciation: "الْخَافِضُ",
         transliteration: "Al-Khafid",
         meaning: {
             en: "The Abaser",
@@ -331,7 +353,8 @@ export const namesData = [
     },
     {
         number: 23,
-        arabic: "الرَّافِعُ",
+        arabic: "ٱلرَّافِعُ",
+        arabicPronunciation: "الرَّافِعُ",
         transliteration: "Ar-Rafi'",
         meaning: {
             en: "The Exalter",
@@ -346,7 +369,8 @@ export const namesData = [
     },
     {
         number: 24,
-        arabic: "الْمُعِزُّ",
+        arabic: "ٱلۡمُعِزُّ",
+        arabicPronunciation: "الْمُعِزُّ",
         transliteration: "Al-Mu'izz",
         meaning: {
             en: "The Honorer",
@@ -361,7 +385,8 @@ export const namesData = [
     },
     {
         number: 25,
-        arabic: "الْمُذِلُّ",
+        arabic: "ٱلۡمُذِلُّ",
+        arabicPronunciation: "الْمُذِلُّ",
         transliteration: "Al-Mudhill",
         meaning: {
             en: "The Humiliator",
@@ -376,7 +401,8 @@ export const namesData = [
     },
     {
         number: 26,
-        arabic: "السَّمِيعُ",
+        arabic: "ٱلسَّمِيعُ",
+        arabicPronunciation: "السَّمِيعُ",
         transliteration: "As-Sami'",
         meaning: {
             en: "The All-Hearing",
@@ -391,7 +417,8 @@ export const namesData = [
     },
     {
         number: 27,
-        arabic: "الْبَصِيرُ",
+        arabic: "ٱلۡبَصِيرُ",
+        arabicPronunciation: "الْبَصِيرُ",
         transliteration: "Al-Baseer",
         meaning: {
             en: "The All-Seeing",
@@ -406,7 +433,8 @@ export const namesData = [
     },
     {
         number: 28,
-        arabic: "الْحَكَمُ",
+        arabic: "ٱلۡحَكَمُ",
+        arabicPronunciation: "الْحَكَمُ",
         transliteration: "Al-Hakam",
         meaning: {
             en: "The Judge",
@@ -421,7 +449,8 @@ export const namesData = [
     },
     {
         number: 29,
-        arabic: "الْعَدْلُ",
+        arabic: "ٱلۡعَدۡلُ",
+        arabicPronunciation: "الْعَدْلُ",
         transliteration: "Al-'Adl",
         meaning: {
             en: "The Just",
@@ -436,7 +465,8 @@ export const namesData = [
     },
     {
         number: 30,
-        arabic: "اللَّطِيفُ",
+        arabic: "ٱللَّطِيفُ",
+        arabicPronunciation: "اللَّطِيفُ",
         transliteration: "Al-Lateef",
         meaning: {
             en: "The Subtle One",
@@ -451,7 +481,8 @@ export const namesData = [
     },
     {
         number: 31,
-        arabic: "الْخَبِيرُ",
+        arabic: "ٱلۡخَبِيرُ",
+        arabicPronunciation: "الْخَبِيرُ",
         transliteration: "Al-Khabeer",
         meaning: {
             en: "The All-Aware",
@@ -466,7 +497,8 @@ export const namesData = [
     },
     {
         number: 32,
-        arabic: "الْحَلِيمُ",
+        arabic: "ٱلۡحَلِيمُ",
+        arabicPronunciation: "الْحَلِيمُ",
         transliteration: "Al-Haleem",
         meaning: {
             en: "The Forbearing",
@@ -481,7 +513,8 @@ export const namesData = [
     },
     {
         number: 33,
-        arabic: "الْعَظِيمُ",
+        arabic: "ٱلۡعَظِيمُ",
+        arabicPronunciation: "الْعَظِيمُ",
         transliteration: "Al-'Adheem",
         meaning: {
             en: "The Magnificent",
@@ -496,7 +529,8 @@ export const namesData = [
     },
     {
         number: 34,
-        arabic: "الْغَفُورُ",
+        arabic: "ٱلۡغَفُورُ",
+        arabicPronunciation: "الْغَفُورُ",
         transliteration: "Al-Ghafoor",
         meaning: {
             en: "The All-Forgiving",
@@ -511,7 +545,8 @@ export const namesData = [
     },
     {
         number: 35,
-        arabic: "الشَّكُورُ",
+        arabic: "ٱلشَّكُورُ",
+        arabicPronunciation: "الشَّكُورُ",
         transliteration: "Ash-Shakoor",
         meaning: {
             en: "The Appreciative",
@@ -526,7 +561,8 @@ export const namesData = [
     },
     {
         number: 36,
-        arabic: "الْعَلِيُّ",
+        arabic: "ٱلۡعَلِيُّ",
+        arabicPronunciation: "الْعَلِيُّ",
         transliteration: "Al-'Aliyy",
         meaning: {
             en: "The Most High",
@@ -541,7 +577,8 @@ export const namesData = [
     },
     {
         number: 37,
-        arabic: "الْكَبِيرُ",
+        arabic: "ٱلۡكَبِيرُ",
+        arabicPronunciation: "الْكَبِيرُ",
         transliteration: "Al-Kabeer",
         meaning: {
             en: "The Most Great",
@@ -556,7 +593,8 @@ export const namesData = [
     },
     {
         number: 38,
-        arabic: "الْحَفِيظُ",
+        arabic: "ٱلۡحَفِيظُ",
+        arabicPronunciation: "الْحَفِيظُ",
         transliteration: "Al-Hafeedh",
         meaning: {
             en: "The Preserver",
@@ -571,7 +609,8 @@ export const namesData = [
     },
     {
         number: 39,
-        arabic: "الْمُقِيتُ",
+        arabic: "ٱلۡمُقِيتُ",
+        arabicPronunciation: "الْمُقِيتُ",
         transliteration: "Al-Muqeet",
         meaning: {
             en: "The Sustainer",
@@ -586,7 +625,8 @@ export const namesData = [
     },
     {
         number: 40,
-        arabic: "الْحَسِيبُ",
+        arabic: "ٱلۡحَسِيبُ",
+        arabicPronunciation: "الْحَسِيبُ",
         transliteration: "Al-Haseeb",
         meaning: {
             en: "The Reckoner",
@@ -601,7 +641,8 @@ export const namesData = [
     },
     {
         number: 41,
-        arabic: "الْجَلِيلُ",
+        arabic: "ٱلۡجَلِيلُ",
+        arabicPronunciation: "الْجَلِيلُ",
         transliteration: "Al-Jaleel",
         meaning: {
             en: "The Majestic",
@@ -616,7 +657,8 @@ export const namesData = [
     },
     {
         number: 42,
-        arabic: "الْكَرِيمُ",
+        arabic: "ٱلۡكَرِيمُ",
+        arabicPronunciation: "الْكَرِيمُ",
         transliteration: "Al-Kareem",
         meaning: {
             en: "The Most Generous",
@@ -631,7 +673,8 @@ export const namesData = [
     },
     {
         number: 43,
-        arabic: "الرَّقِيبُ",
+        arabic: "ٱلرَّقِيبُ",
+        arabicPronunciation: "الرَّقِيبُ",
         transliteration: "Ar-Raqeeb",
         meaning: {
             en: "The Watchful",
@@ -646,7 +689,8 @@ export const namesData = [
     },
     {
         number: 44,
-        arabic: "الْمُجِيبُ",
+        arabic: "ٱلۡمُجِيبُ",
+        arabicPronunciation: "الْمُجِيبُ",
         transliteration: "Al-Mujeeb",
         meaning: {
             en: "The Responsive One",
@@ -661,7 +705,8 @@ export const namesData = [
     },
     {
         number: 45,
-        arabic: "الْوَاسِعُ",
+        arabic: "ٱلۡوَٰسِعُ",
+        arabicPronunciation: "الْوَاسِعُ",
         transliteration: "Al-Wasi'",
         meaning: {
             en: "The All-Encompassing",
@@ -676,7 +721,8 @@ export const namesData = [
     },
     {
         number: 46,
-        arabic: "الْحَكِيمُ",
+        arabic: "ٱلۡحَكِيمُ",
+        arabicPronunciation: "الْحَكِيمُ",
         transliteration: "Al-Hakeem",
         meaning: {
             en: "The All-Wise",
@@ -691,7 +737,8 @@ export const namesData = [
     },
     {
         number: 47,
-        arabic: "الْوَدُودُ",
+        arabic: "ٱلۡوَدُودُ",
+        arabicPronunciation: "الْوَدُودُ",
         transliteration: "Al-Wadood",
         meaning: {
             en: "The Most Loving",
@@ -706,7 +753,8 @@ export const namesData = [
     },
     {
         number: 48,
-        arabic: "الْمَجِيدُ",
+        arabic: "ٱلۡمَجِيدُ",
+        arabicPronunciation: "الْمَجِيدُ",
         transliteration: "Al-Majeed",
         meaning: {
             en: "The Glorious",
@@ -721,7 +769,8 @@ export const namesData = [
     },
     {
         number: 49,
-        arabic: "الْبَاعِثُ",
+        arabic: "ٱلۡبَاعِثُ",
+        arabicPronunciation: "الْبَاعِثُ",
         transliteration: "Al-Ba'ith",
         meaning: {
             en: "The Resurrector",
@@ -736,7 +785,8 @@ export const namesData = [
     },
     {
         number: 50,
-        arabic: "الشَّهِيدُ",
+        arabic: "ٱلشَّهِيدُ",
+        arabicPronunciation: "الشَّهِيدُ",
         transliteration: "Ash-Shaheed",
         meaning: {
             en: "The Witness",
@@ -751,7 +801,8 @@ export const namesData = [
     },
     {
         number: 51,
-        arabic: "الْحَقُّ",
+        arabic: "ٱلۡحَقُّ",
+        arabicPronunciation: "الْحَقُّ",
         transliteration: "Al-Haqq",
         meaning: {
             en: "The Truth",
@@ -766,7 +817,8 @@ export const namesData = [
     },
     {
         number: 52,
-        arabic: "الْوَكِيلُ",
+        arabic: "ٱلۡوَكِيلُ",
+        arabicPronunciation: "الْوَكِيلُ",
         transliteration: "Al-Wakeel",
         meaning: {
             en: "The Trustee",
@@ -781,7 +833,8 @@ export const namesData = [
     },
     {
         number: 53,
-        arabic: "الْقَوِيُّ",
+        arabic: "ٱلۡقَوِيُّ",
+        arabicPronunciation: "الْقَوِيُّ",
         transliteration: "Al-Qawiyy",
         meaning: {
             en: "The Most Strong",
@@ -796,7 +849,8 @@ export const namesData = [
     },
     {
         number: 54,
-        arabic: "الْمَتِينُ",
+        arabic: "ٱلۡمَتِينُ",
+        arabicPronunciation: "الْمَتِينُ",
         transliteration: "Al-Mateen",
         meaning: {
             en: "The Firm",
@@ -811,7 +865,8 @@ export const namesData = [
     },
     {
         number: 55,
-        arabic: "الْوَلِيُّ",
+        arabic: "ٱلۡوَلِيُّ",
+        arabicPronunciation: "الْوَلِيُّ",
         transliteration: "Al-Waliyy",
         meaning: {
             en: "The Protecting Friend",
@@ -826,7 +881,8 @@ export const namesData = [
     },
     {
         number: 56,
-        arabic: "الْحَمِيدُ",
+        arabic: "ٱلۡحَمِيدُ",
+        arabicPronunciation: "الْحَمِيدُ",
         transliteration: "Al-Hameed",
         meaning: {
             en: "The Praiseworthy",
@@ -841,7 +897,8 @@ export const namesData = [
     },
     {
         number: 57,
-        arabic: "الْمُحْصِي",
+        arabic: "ٱلۡمُحۡصِي",
+        arabicPronunciation: "الْمُحْصِي",
         transliteration: "Al-Muhsi",
         meaning: {
             en: "The Accounter",
@@ -856,7 +913,8 @@ export const namesData = [
     },
     {
         number: 58,
-        arabic: "الْمُبْدِئُ",
+        arabic: "ٱلۡمُبۡدِئُ",
+        arabicPronunciation: "الْمُبْدِئُ",
         transliteration: "Al-Mubdi'",
         meaning: {
             en: "The Originator",
@@ -871,7 +929,8 @@ export const namesData = [
     },
     {
         number: 59,
-        arabic: "الْمُعِيدُ",
+        arabic: "ٱلۡمُعِيدُ",
+        arabicPronunciation: "الْمُعِيدُ",
         transliteration: "Al-Mu'eed",
         meaning: {
             en: "The Restorer",
@@ -886,7 +945,8 @@ export const namesData = [
     },
     {
         number: 60,
-        arabic: "الْمُحْيِي",
+        arabic: "ٱلۡمُحۡيِي",
+        arabicPronunciation: "الْمُحْيِي",
         transliteration: "Al-Muhyi",
         meaning: {
             en: "The Giver of Life",
@@ -901,7 +961,8 @@ export const namesData = [
     },
     {
         number: 61,
-        arabic: "الْمُمِيتُ",
+        arabic: "ٱلۡمُمِيتُ",
+        arabicPronunciation: "الْمُمِيتُ",
         transliteration: "Al-Mumeet",
         meaning: {
             en: "The Taker of Life",
@@ -916,7 +977,8 @@ export const namesData = [
     },
     {
         number: 62,
-        arabic: "الْحَيُّ",
+        arabic: "ٱلۡحَيُّ",
+        arabicPronunciation: "الْحَيُّ",
         transliteration: "Al-Hayy",
         meaning: {
             en: "The Ever-Living",
@@ -931,7 +993,8 @@ export const namesData = [
     },
     {
         number: 63,
-        arabic: "الْقَيُّومُ",
+        arabic: "ٱلۡقَيُّومُ",
+        arabicPronunciation: "الْقَيُّومُ",
         transliteration: "Al-Qayyoom",
         meaning: {
             en: "The Self-Subsisting",
@@ -946,7 +1009,8 @@ export const namesData = [
     },
     {
         number: 64,
-        arabic: "الْوَاجِدُ",
+        arabic: "ٱلۡوَاجِدُ",
+        arabicPronunciation: "الْوَاجِدُ",
         transliteration: "Al-Wajid",
         meaning: {
             en: "The Finder",
@@ -961,7 +1025,8 @@ export const namesData = [
     },
     {
         number: 65,
-        arabic: "الْمَاجِدُ",
+        arabic: "ٱلۡمَاجِدُ",
+        arabicPronunciation: "الْمَاجِدُ",
         transliteration: "Al-Majid",
         meaning: {
             en: "The Noble",
@@ -976,7 +1041,8 @@ export const namesData = [
     },
     {
         number: 66,
-        arabic: "الْوَاحِدُ",
+        arabic: "ٱلۡوَٰحِدُ",
+        arabicPronunciation: "الْوَاحِدُ",
         transliteration: "Al-Wahid",
         meaning: {
             en: "The One",
@@ -991,7 +1057,8 @@ export const namesData = [
     },
     {
         number: 67,
-        arabic: "الأَحَدُ",
+        arabic: "ٱلۡأَحَدُ",
+        arabicPronunciation: "الأَحَدُ",
         transliteration: "Al-Ahad",
         meaning: {
             en: "The Unique One",
@@ -1006,7 +1073,8 @@ export const namesData = [
     },
     {
         number: 68,
-        arabic: "الصَّمَدُ",
+        arabic: "ٱلصَّمَدُ",
+        arabicPronunciation: "الصَّمَدُ",
         transliteration: "As-Samad",
         meaning: {
             en: "The Eternal Refuge",
@@ -1021,7 +1089,8 @@ export const namesData = [
     },
     {
         number: 69,
-        arabic: "الْقَادِرُ",
+        arabic: "ٱلۡقَادِرُ",
+        arabicPronunciation: "الْقَادِرُ",
         transliteration: "Al-Qadir",
         meaning: {
             en: "The Capable",
@@ -1036,7 +1105,8 @@ export const namesData = [
     },
     {
         number: 70,
-        arabic: "الْمُقْتَدِرُ",
+        arabic: "ٱلۡمُقۡتَدِرُ",
+        arabicPronunciation: "الْمُقْتَدِرُ",
         transliteration: "Al-Muqtadir",
         meaning: {
             en: "The All-Powerful",
@@ -1051,7 +1121,8 @@ export const namesData = [
     },
     {
         number: 71,
-        arabic: "الْمُقَدِّمُ",
+        arabic: "ٱلۡمُقَدِّمُ",
+        arabicPronunciation: "الْمُقَدِّمُ",
         transliteration: "Al-Muqaddim",
         meaning: {
             en: "The Expediter",
@@ -1066,7 +1137,8 @@ export const namesData = [
     },
     {
         number: 72,
-        arabic: "الْمُؤَخِّرُ",
+        arabic: "ٱلۡمُؤَخِّرُ",
+        arabicPronunciation: "الْمُؤَخِّرُ",
         transliteration: "Al-Mu'akhkhir",
         meaning: {
             en: "The Delayer",
@@ -1081,7 +1153,8 @@ export const namesData = [
     },
     {
         number: 73,
-        arabic: "الأَوَّلُ",
+        arabic: "ٱلۡأَوَّلُ",
+        arabicPronunciation: "الأَوَّلُ",
         transliteration: "Al-Awwal",
         meaning: {
             en: "The First",
@@ -1096,7 +1169,8 @@ export const namesData = [
     },
     {
         number: 74,
-        arabic: "الآخِرُ",
+        arabic: "ٱلۡآخِرُ",
+        arabicPronunciation: "الآخِرُ",
         transliteration: "Al-Akhir",
         meaning: {
             en: "The Last",
@@ -1111,7 +1185,8 @@ export const namesData = [
     },
     {
         number: 75,
-        arabic: "الظَّاهِرُ",
+        arabic: "ٱلظَّٰهِرُ",
+        arabicPronunciation: "الظَّاهِرُ",
         transliteration: "Adh-Dhahir",
         meaning: {
             en: "The Manifest",
@@ -1126,7 +1201,8 @@ export const namesData = [
     },
     {
         number: 76,
-        arabic: "الْبَاطِنُ",
+        arabic: "ٱلۡبَاطِنُ",
+        arabicPronunciation: "الْبَاطِنُ",
         transliteration: "Al-Batin",
         meaning: {
             en: "The Hidden",
@@ -1141,7 +1217,8 @@ export const namesData = [
     },
     {
         number: 77,
-        arabic: "الْوَالِي",
+        arabic: "ٱلۡوَالِي",
+        arabicPronunciation: "الْوَالِي",
         transliteration: "Al-Wali",
         meaning: {
             en: "The Governor",
@@ -1156,7 +1233,8 @@ export const namesData = [
     },
     {
         number: 78,
-        arabic: "الْمُتَعَالِي",
+        arabic: "ٱلۡمُتَعَالِي",
+        arabicPronunciation: "الْمُتَعَالِي",
         transliteration: "Al-Muta'ali",
         meaning: {
             en: "The Most Exalted",
@@ -1171,7 +1249,8 @@ export const namesData = [
     },
     {
         number: 79,
-        arabic: "الْبَرُّ",
+        arabic: "ٱلۡبَرُّ",
+        arabicPronunciation: "الْبَرُّ",
         transliteration: "Al-Barr",
         meaning: {
             en: "The Source of Goodness",
@@ -1186,7 +1265,8 @@ export const namesData = [
     },
     {
         number: 80,
-        arabic: "التَّوَّابُ",
+        arabic: "ٱلتَّوَّابُ",
+        arabicPronunciation: "التَّوَّابُ",
         transliteration: "At-Tawwab",
         meaning: {
             en: "The Accepter of Repentance",
@@ -1201,7 +1281,8 @@ export const namesData = [
     },
     {
         number: 81,
-        arabic: "الْمُنْتَقِمُ",
+        arabic: "ٱلۡمُنتَقِمُ",
+        arabicPronunciation: "الْمُنْتَقِمُ",
         transliteration: "Al-Muntaqim",
         meaning: {
             en: "The Avenger",
@@ -1216,7 +1297,8 @@ export const namesData = [
     },
     {
         number: 82,
-        arabic: "العَفُوُّ",
+        arabic: "ٱلۡعَفُوُّ",
+        arabicPronunciation: "العَفُوُّ",
         transliteration: "Al-'Afuww",
         meaning: {
             en: "The Pardoner",
@@ -1231,7 +1313,8 @@ export const namesData = [
     },
     {
         number: 83,
-        arabic: "الرَّءُوفُ",
+        arabic: "ٱلرَّؤُوفُ",
+        arabicPronunciation: "الرَّءُوفُ",
         transliteration: "Ar-Ra'oof",
         meaning: {
             en: "The Most Kind",
@@ -1246,7 +1329,8 @@ export const namesData = [
     },
     {
         number: 84,
-        arabic: "مَالِكُ الْمُلْكِ",
+        arabic: "مَٰلِكُ ٱلۡمُلۡكِ",
+        arabicPronunciation: "مَالِكُ الْمُلْكِ",
         transliteration: "Malik-ul-Mulk",
         meaning: {
             en: "The Owner of Sovereignty",
@@ -1261,7 +1345,8 @@ export const namesData = [
     },
     {
         number: 85,
-        arabic: "ذُو الْجَلَالِ وَالإِكْرَامِ",
+        arabic: "ذُو ٱلۡجَلَٰلِ وَٱلۡإِكۡرَامِ",
+        arabicPronunciation: "ذُو الْجَلَالِ وَالإِكْرَامِ",
         transliteration: "Dhul-Jalali Wal-Ikram",
         meaning: {
             en: "The Lord of Majesty and Generosity",
@@ -1276,7 +1361,8 @@ export const namesData = [
     },
     {
         number: 86,
-        arabic: "الْمُقْسِطُ",
+        arabic: "ٱلۡمُقۡسِطُ",
+        arabicPronunciation: "الْمُقْسِطُ",
         transliteration: "Al-Muqsit",
         meaning: {
             en: "The Just One",
@@ -1291,7 +1377,8 @@ export const namesData = [
     },
     {
         number: 87,
-        arabic: "الْجَامِعُ",
+        arabic: "ٱلۡجَامِعُ",
+        arabicPronunciation: "الْجَامِعُ",
         transliteration: "Al-Jami'",
         meaning: {
             en: "The Gatherer",
@@ -1306,7 +1393,8 @@ export const namesData = [
     },
     {
         number: 88,
-        arabic: "الْغَنِيُّ",
+        arabic: "ٱلۡغَنِيُّ",
+        arabicPronunciation: "الْغَنِيُّ",
         transliteration: "Al-Ghaniyy",
         meaning: {
             en: "The Self-Sufficient",
@@ -1321,7 +1409,8 @@ export const namesData = [
     },
     {
         number: 89,
-        arabic: "الْمُغْنِي",
+        arabic: "ٱلۡمُغۡنِي",
+        arabicPronunciation: "الْمُغْنِي",
         transliteration: "Al-Mughni",
         meaning: {
             en: "The Enricher",
@@ -1336,7 +1425,8 @@ export const namesData = [
     },
     {
         number: 90,
-        arabic: "الْمَانِعُ",
+        arabic: "ٱلۡمَٰنِعُ",
+        arabicPronunciation: "الْمَانِعُ",
         transliteration: "Al-Mani'",
         meaning: {
             en: "The Preventer",
@@ -1351,7 +1441,8 @@ export const namesData = [
     },
     {
         number: 91,
-        arabic: "الضَّارُّ",
+        arabic: "ٱلضَّارُّ",
+        arabicPronunciation: "الضَّارُّ",
         transliteration: "Ad-Darr",
         meaning: {
             en: "The Distresser",
@@ -1366,7 +1457,8 @@ export const namesData = [
     },
     {
         number: 92,
-        arabic: "النَّافِعُ",
+        arabic: "ٱلنَّافِعُ",
+        arabicPronunciation: "النَّافِعُ",
         transliteration: "An-Nafi'",
         meaning: {
             en: "The Benefiter",
@@ -1381,7 +1473,8 @@ export const namesData = [
     },
     {
         number: 93,
-        arabic: "النُّورُ",
+        arabic: "ٱلنُّورُ",
+        arabicPronunciation: "النُّورُ",
         transliteration: "An-Noor",
         meaning: {
             en: "The Light",
@@ -1396,7 +1489,8 @@ export const namesData = [
     },
     {
         number: 94,
-        arabic: "الْهَادِي",
+        arabic: "ٱلۡهَادِي",
+        arabicPronunciation: "الْهَادِي",
         transliteration: "Al-Hadi",
         meaning: {
             en: "The Guide",
@@ -1411,7 +1505,8 @@ export const namesData = [
     },
     {
         number: 95,
-        arabic: "الْبَدِيعُ",
+        arabic: "ٱلۡبَدِيعُ",
+        arabicPronunciation: "الْبَدِيعُ",
         transliteration: "Al-Badee'",
         meaning: {
             en: "The Incomparable Originator",
@@ -1426,7 +1521,8 @@ export const namesData = [
     },
     {
         number: 96,
-        arabic: "الْبَاقِي",
+        arabic: "ٱلۡبَاقِي",
+        arabicPronunciation: "الْبَاقِي",
         transliteration: "Al-Baqi",
         meaning: {
             en: "The Everlasting",
@@ -1441,7 +1537,8 @@ export const namesData = [
     },
     {
         number: 97,
-        arabic: "الْوَارِثُ",
+        arabic: "ٱلۡوَٰرِثُ",
+        arabicPronunciation: "الْوَارِثُ",
         transliteration: "Al-Warith",
         meaning: {
             en: "The Inheritor",
@@ -1456,7 +1553,8 @@ export const namesData = [
     },
     {
         number: 98,
-        arabic: "الرَّشِيدُ",
+        arabic: "ٱلرَّشِيدُ",
+        arabicPronunciation: "الرَّشِيدُ",
         transliteration: "Ar-Rasheed",
         meaning: {
             en: "The Right-Guiding",
@@ -1471,7 +1569,8 @@ export const namesData = [
     },
     {
         number: 99,
-        arabic: "الصَّبُورُ",
+        arabic: "ٱلصَّبُورُ",
+        arabicPronunciation: "الصَّبُورُ",
         transliteration: "As-Saboor",
         meaning: {
             en: "The Most Patient",
