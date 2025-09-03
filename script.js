@@ -303,7 +303,7 @@ function initializeEventListeners() {
     // Play audio
     document.getElementById('playAudio').addEventListener('click', () => {
         const name = namesData[appState.currentStudyIndex];
-        playNameAudio(name.arabic);
+        playNameAudio(name);
     });
 
     // Modal close
@@ -333,19 +333,30 @@ function initializeEventListeners() {
             } else if (e.key === ' ') {
                 e.preventDefault();
                 const name = namesData[appState.currentStudyIndex];
-                playNameAudio(name.arabic);
+                playNameAudio(name);
             }
         }
     });
 }
 
 // Play name audio with visual feedback
-function playNameAudio(arabic) {
+function playNameAudio(nameOrArabic) {
     if ('speechSynthesis' in window) {
         // Cancel any ongoing speech
         speechSynthesis.cancel();
         
-        const utterance = new SpeechSynthesisUtterance(arabic);
+        // Determine what text to pronounce
+        let textToSpeak;
+        if (typeof nameOrArabic === 'object' && nameOrArabic !== null) {
+            // If it's a name object, use arabicPronunciation if available
+            textToSpeak = nameOrArabic.arabicPronunciation || nameOrArabic.arabic;
+        } else {
+            // If it's just a string, try to find the name in the data
+            const name = namesData.find(n => n.arabic === nameOrArabic);
+            textToSpeak = name ? (name.arabicPronunciation || name.arabic) : nameOrArabic;
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
         utterance.lang = 'ar';
         utterance.rate = 0.8;
         
@@ -446,7 +457,7 @@ function createNameCard(name) {
             <button class="btn-action btn-favorite" data-number="${name.number}">
                 ${isFavorite ? '💔' : '❤️'}
             </button>
-            <button class="btn-action btn-play" data-arabic="${name.arabic}">🔊</button>
+            <button class="btn-action btn-play" data-number="${name.number}">🔊</button>
         </div>
     `;
     
@@ -463,7 +474,11 @@ function createNameCard(name) {
     
     card.querySelector('.btn-play').addEventListener('click', (e) => {
         e.stopPropagation();
-        playNameAudio(e.target.dataset.arabic);
+        const nameNumber = parseInt(e.target.dataset.number);
+        const nameToPlay = namesData.find(n => n.number === nameNumber);
+        if (nameToPlay) {
+            playNameAudio(nameToPlay);
+        }
     });
     
     // Click on card to study
@@ -483,9 +498,18 @@ function studyName(index) {
     renderView();
 }
 
-// Play name audio (global function for onclick)
-function playName(arabic) {
-    playNameAudio(arabic);
+// Play name audio (global function for onclick) - Updated
+function playName(nameNumberOrArabic) {
+    // If it's a number, find the name object
+    if (typeof nameNumberOrArabic === 'number') {
+        const name = namesData.find(n => n.number === nameNumberOrArabic);
+        if (name) {
+            playNameAudio(name);
+        }
+    } else {
+        // Otherwise pass it as is
+        playNameAudio(nameNumberOrArabic);
+    }
 }
 
 // Render enhanced study view
