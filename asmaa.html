@@ -68,7 +68,7 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="quizProgress"></div>
                     </div>
-                    <div style="text-align: center; margin-top: 0.5rem; color: var(--text-secondary);">
+                    <div style="text-align: center; margin-top: 0.5rem; color: var(--text-secondary);" id="questionCounter">
                         Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
                     </div>
                 </div>
@@ -84,19 +84,19 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value" id="totalLearned">0</div>
-                    <div class="stat-label">Names Learned</div>
+                    <div class="stat-label" id="learnedLabel">Names Learned</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="currentStreak">0</div>
-                    <div class="stat-label">Day Streak</div>
+                    <div class="stat-label" id="streakLabel">Day Streak</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="quizAccuracy">0%</div>
-                    <div class="stat-label">Quiz Accuracy</div>
+                    <div class="stat-label" id="accuracyLabel">Quiz Accuracy</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="totalQuizzes">0</div>
-                    <div class="stat-label">Quizzes Completed</div>
+                    <div class="stat-label" id="quizzesLabel">Quizzes Completed</div>
                 </div>
             </div>
             <div class="names-grid" id="progressGrid"></div>
