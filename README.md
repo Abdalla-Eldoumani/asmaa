@@ -100,4 +100,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*"He is Allah, the Creator, the Inventor, the Fashioner; to Him belong the best names."* - Quran 59:24
+*"He is Allah: the Creator, the Inventor, the Shaper. He ˹alone˺ has the Most Beautiful Names."* - Quran 59:24
