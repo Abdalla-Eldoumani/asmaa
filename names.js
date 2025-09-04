@@ -65,7 +65,7 @@ export const namesData = [
     },
     {
         number: 5,
-        arabic: "ٱلسَّلَٰمُ",
+        arabic: "السَّلَامُ",
         arabicPronunciation: "السَّلَامُ",
         transliteration: "As-Salam",
         meaning: {
@@ -161,7 +161,7 @@ export const namesData = [
     },
     {
         number: 11,
-        arabic: "ٱلۡخَٰلِقُ",
+        arabic: "الْخَالِقُ",
         arabicPronunciation: "الْخَالِقُ",
         transliteration: "Al-Khaliq",
         meaning: {
@@ -209,7 +209,7 @@ export const namesData = [
     },
     {
         number: 14,
-        arabic: "ٱلۡغَفَّٰرُ",
+        arabic: "الْغَفَّارُ",
         arabicPronunciation: "الْغَفَّارُ",
         transliteration: "Al-Ghaffar",
         meaning: {
@@ -705,7 +705,7 @@ export const namesData = [
     },
     {
         number: 45,
-        arabic: "ٱلۡوَٰسِعُ",
+        arabic: "الْوَاسِعُ",
         arabicPronunciation: "الْوَاسِعُ",
         transliteration: "Al-Wasi'",
         meaning: {
@@ -1041,7 +1041,7 @@ export const namesData = [
     },
     {
         number: 66,
-        arabic: "ٱلۡوَٰحِدُ",
+        arabic: "الْوَاحِدُ",
         arabicPronunciation: "الْوَاحِدُ",
         transliteration: "Al-Wahid",
         meaning: {
@@ -1185,7 +1185,7 @@ export const namesData = [
     },
     {
         number: 75,
-        arabic: "ٱلظَّٰهِرُ",
+        arabic: "الظَّاهِرُ",
         arabicPronunciation: "الظَّاهِرُ",
         transliteration: "Adh-Dhahir",
         meaning: {
@@ -1329,7 +1329,7 @@ export const namesData = [
     },
     {
         number: 84,
-        arabic: "مَٰلِكُ ٱلۡمُلۡكِ",
+        arabic: "مَالِكُ الْمُلْكِ",
         arabicPronunciation: "مَالِكُ الْمُلْكِ",
         transliteration: "Malik-ul-Mulk",
         meaning: {
@@ -1425,7 +1425,7 @@ export const namesData = [
     },
     {
         number: 90,
-        arabic: "ٱلۡمَٰنِعُ",
+        arabic: "الْمَانِعُ",
         arabicPronunciation: "الْمَانِعُ",
         transliteration: "Al-Mani'",
         meaning: {
@@ -1537,7 +1537,7 @@ export const namesData = [
     },
     {
         number: 97,
-        arabic: "ٱلۡوَٰرِثُ",
+        arabic: "الْوَارِثُ",
         arabicPronunciation: "الْوَارِثُ",
         transliteration: "Al-Warith",
         meaning: {
