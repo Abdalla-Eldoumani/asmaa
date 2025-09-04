@@ -654,8 +654,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.05); 
+        opacity: 0.9;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .btn-play, 
+    #playAudio,
+    .btn-action.btn-play {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    
+    .btn-play:active,
+    #playAudio:active,
+    .btn-action.btn-play:active {
+        transform: scale(0.95);
+    }
 }
 
 /* ===== Quiz View ===== */
