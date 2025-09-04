@@ -135,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme();
     renderView();
     checkDailyName();
+    
+    document.addEventListener('click', initializeAudioForMobile, { once: true });
+    document.addEventListener('touchstart', initializeAudioForMobile, { once: true });
 });
 
 // Load settings from localStorage
@@ -339,37 +342,176 @@ function initializeEventListeners() {
     });
 }
 
-// Play name audio with visual feedback
-function playNameAudio(nameOrArabic) {
+// Audio initialization flag for mobile
+let audioInitialized = false;
+
+// Initialize audio on first user interaction (for mobile)
+function initializeAudioForMobile() {
+    if (audioInitialized) return;
+    
+    // Try to initialize speech synthesis
     if ('speechSynthesis' in window) {
         // Cancel any ongoing speech
         speechSynthesis.cancel();
         
-        // Determine what text to pronounce
-        let textToSpeak;
-        if (typeof nameOrArabic === 'object' && nameOrArabic !== null) {
-            // If it's a name object, use arabicPronunciation if available
-            textToSpeak = nameOrArabic.arabicPronunciation || nameOrArabic.arabic;
-        } else {
-            // If it's just a string, try to find the name in the data
-            const name = namesData.find(n => n.arabic === nameOrArabic);
-            textToSpeak = name ? (name.arabicPronunciation || name.arabic) : nameOrArabic;
+        const silentUtterance = new SpeechSynthesisUtterance('');
+        silentUtterance.volume = 0;
+        silentUtterance.lang = 'ar-SA';
+        
+        try {
+            speechSynthesis.speak(silentUtterance);
+        } catch (e) {
+            console.log('Silent speech failed:', e);
         }
         
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'ar';
-        utterance.rate = 0.8;
+        const checkVoices = () => {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                audioInitialized = true;
+                console.log('Audio initialized with', voices.length, 'voices');
+            }
+        };
         
-        // Visual feedback
-        const playButton = document.getElementById('playAudio');
-        if (playButton) {
-            playButton.classList.add('playing');
-            utterance.onend = () => {
-                playButton.classList.remove('playing');
+        checkVoices();
+        
+        if (!audioInitialized) {
+            speechSynthesis.addEventListener('voiceschanged', checkVoices);
+        }
+    }
+    
+    audioInitialized = true;
+}
+
+// Play name audio with visual feedback and mobile compatibility
+function playNameAudio(nameOrArabic) {
+    // Initialize audio on mobile if not done yet
+    initializeAudioForMobile();
+    
+    // Determine what text to pronounce
+    let textToSpeak;
+    let nameObject = null;
+    
+    if (typeof nameOrArabic === 'object' && nameOrArabic !== null) {
+        nameObject = nameOrArabic;
+        textToSpeak = nameOrArabic.arabicPronunciation || nameOrArabic.arabic;
+    } else {
+        const name = namesData.find(n => n.arabic === nameOrArabic);
+        nameObject = name;
+        textToSpeak = name ? (name.arabicPronunciation || name.arabic) : nameOrArabic;
+    }
+    
+    // Visual feedback for all play buttons
+    const allPlayButtons = document.querySelectorAll('.btn-play, #playAudio');
+    allPlayButtons.forEach(btn => btn.classList.add('playing'));
+    
+    const resetButtons = () => {
+        allPlayButtons.forEach(btn => btn.classList.remove('playing'));
+    };
+    
+    // Primary method: Web Speech API
+    if ('speechSynthesis' in window) {
+        try {
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'ar-SA'; // More specific Arabic locale
+            utterance.rate = 0.75; // Slightly slower for clarity
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            // Handle end of speech
+            utterance.onend = resetButtons;
+            utterance.onerror = (e) => {
+                console.log('Speech synthesis error:', e);
+                resetButtons();
+                // Try fallback method
+                playNameAudioFallback(nameObject, resetButtons);
             };
+            
+            // For iOS/Safari - need to handle voices differently
+            const voices = speechSynthesis.getVoices();
+            const arabicVoice = voices.find(voice => 
+                voice.lang.startsWith('ar') || 
+                voice.name.includes('Arabic')
+            );
+            
+            if (arabicVoice) {
+                utterance.voice = arabicVoice;
+            }
+            
+            // Speak with a small delay for mobile
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 10);
+            
+        } catch (error) {
+            console.error('Speech synthesis failed:', error);
+            resetButtons();
+            // Try fallback method
+            playNameAudioFallback(nameObject, resetButtons);
         }
+    } else {
+        // Fallback for browsers without speech synthesis
+        playNameAudioFallback(nameObject, resetButtons);
+    }
+}
+
+// Fallback audio method with alternative approaches
+function playNameAudioFallback(nameObject, callback) {
+    if (!nameObject) {
+        if (callback) callback();
+        return;
+    }
+    
+    // Method 1: Try ResponsiveVoice if available (free TTS library)
+    if (typeof responsiveVoice !== 'undefined') {
+        try {
+            responsiveVoice.speak(nameObject.arabic, "Arabic", {
+                onend: callback,
+                onerror: callback,
+                rate: 0.8
+            });
+            return;
+        } catch (e) {
+            console.log('ResponsiveVoice not available');
+        }
+    }
+    
+    // Method 2: Use a simple alert as last resort to show the pronunciation
+    if (nameObject.transliteration) {
+        // Show a temporary notification with the transliteration
+        const notification = document.createElement('div');
+        notification.className = 'audio-fallback-notification';
+        notification.innerHTML = `
+            <div style="
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary-green);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                text-align: center;
+                font-size: 1.2rem;
+            ">
+                🔊 ${nameObject.transliteration}
+                <div style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;">
+                    Pronunciation guide
+                </div>
+            </div>
+        `;
+        document.body.appendChild(notification);
         
-        speechSynthesis.speak(utterance);
+        setTimeout(() => {
+            notification.remove();
+            if (callback) callback();
+        }, 3000);
+    } else {
+        if (callback) callback();
     }
 }
 
