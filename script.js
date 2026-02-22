@@ -54,10 +54,10 @@ const translations = {
         noFavorites: 'No favorite names yet',
         startNewQuiz: 'Start New Quiz',
         questionsFormat: 'Question {current} of {total}',
-        perfectScore: '🌟 Perfect! Masha\'Allah! 🌟',
-        excellentScore: '✨ Excellent work! ✨',
-        goodScore: '👍 Good job! Keep learning!',
-        keepPracticing: '📚 Keep practicing, you\'ll improve!'
+        perfectScore: 'Perfect! Masha\'Allah!',
+        excellentScore: 'Excellent work!',
+        goodScore: 'Good job! Keep learning!',
+        keepPracticing: 'Keep practicing, you\'ll improve!'
     },
     ar: {
         browse: 'تصفح',
@@ -87,10 +87,10 @@ const translations = {
         noFavorites: 'لا توجد أسماء مفضلة بعد',
         startNewQuiz: 'ابدأ اختبار جديد',
         questionsFormat: 'السؤال {current} من {total}',
-        perfectScore: '🌟 ممتاز! ماشاء الله! 🌟',
-        excellentScore: '✨ عمل ممتاز! ✨',
-        goodScore: '👍 عمل جيد! استمر في التعلم!',
-        keepPracticing: '📚 استمر في الممارسة، ستتحسن!'
+        perfectScore: 'ممتاز! ماشاء الله!',
+        excellentScore: 'عمل ممتاز!',
+        goodScore: 'عمل جيد! استمر في التعلم!',
+        keepPracticing: 'استمر في الممارسة، ستتحسن!'
     },
     fr: {
         browse: 'Parcourir',
@@ -120,10 +120,10 @@ const translations = {
         noFavorites: 'Pas encore de noms favoris',
         startNewQuiz: 'Commencer un Nouveau Quiz',
         questionsFormat: 'Question {current} sur {total}',
-        perfectScore: '🌟 Parfait! Masha\'Allah! 🌟',
-        excellentScore: '✨ Excellent travail! ✨',
-        goodScore: '👍 Bon travail! Continuez à apprendre!',
-        keepPracticing: '📚 Continuez à pratiquer, vous vous améliorerez!'
+        perfectScore: 'Parfait! Masha\'Allah!',
+        excellentScore: 'Excellent travail!',
+        goodScore: 'Bon travail! Continuez à apprendre!',
+        keepPracticing: 'Continuez à pratiquer, vous vous améliorerez!'
     }
 };
 
