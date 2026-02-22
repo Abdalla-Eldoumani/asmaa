@@ -1,103 +1,65 @@
 # Asmaa - 99 Names of Allah Learning App
 
-A beautiful, interactive web application for learning and memorizing the 99 Beautiful Names of Allah (Asma-ul-Husna) with proper Arabic pronunciation, meanings, and reflections in multiple languages.
+A web application for learning and memorizing the 99 Names of Allah (Asma ul-Husna) with support for Arabic, English, and French.
 
-## ✨ Features
+## Features
 
-- **Browse All Names**: Explore all 99 names with Arabic text, transliteration, and meanings
-- **Multi-Language Support**: Full support for English, Arabic, and French interfaces
-- **Study Mode**: Learn each name in detail with reflections and audio pronunciation
-- **Audio Pronunciation**: Hear authentic Arabic pronunciation with optimized text-to-speech
-- **Interactive Quiz**: Test your knowledge with randomized quizzes
-- **Progress Tracking**: Monitor your learning journey with statistics and favorites
-- **Daily Reminders**: Get a daily name to reflect upon
-- **Dark/Light Theme**: Comfortable viewing in any lighting condition
-- **Responsive Design**: Works beautifully on desktop, tablet, and mobile devices
+- Browse all 99 names with Arabic text, transliteration, and meanings
+- Study mode with reflections and audio pronunciation
+- Interactive quiz with randomized multiple-choice questions
+- Progress tracking with statistics, streaks, and favorites
+- Daily name reminder
+- Dark and light themes
+- Responsive layout for desktop, tablet, and mobile
+- Full RTL support for the Arabic interface
 
-## 🌐 Live Demo
+## Live Demo
 
-Visit the app directly at: [https://asmaa-alpha.vercel.app/](https://asmaa-alpha.vercel.app/)
+[https://asmaa-alpha.vercel.app/](https://asmaa-alpha.vercel.app/)
 
-## 🚀 Quick Start
-
-### Option 1: Use the Live Version
-Simply visit [https://asmaa-alpha.vercel.app/](https://asmaa-alpha.vercel.app/) to start using the app immediately!
-
-### Option 2: Run Locally
-Clone and run the app on your own machine:
+## Setup
 
 ```bash
-# Clone the repository
 git clone https://github.com/Abdalla-Eldoumani/asmaa.git
-
-# Navigate to the project folder
-
-# Open in your browser
+cd asmaa
 open index.html
 ```
 
-No installation or build process required!
+No build process or dependencies required. For features that use ES modules, serve locally:
 
-## 📁 Project Structure
+```bash
+python -m http.server 8000
+# or
+npx serve .
+```
+
+## Project Structure
 
 ```
 asmaa/
 ├── index.html        # Main HTML file
-├── styles.css        # All styling and themes
-├── script.js         # Main application logic
-├── names.js          # Database of 99 names with translations
+├── styles.css        # Styling and themes
+├── script.js         # Application logic
+├── names.js          # 99 names with translations
 ├── LICENSE           # MIT License
-└── README.md         # This file
+└── README.md
 ```
 
-## 🎯 Key Features Explained
+## Technologies
 
-### Smart Pronunciation System
-The app uses a dual-text system for Arabic display and pronunciation:
-- **Display Text**: Shows authentic Quranic Arabic with proper diacritical marks (e.g., ٱلرَّحۡمَٰنُ)
-- **Pronunciation Text**: Optimized for text-to-speech engines to ensure correct pronunciation
+- Vanilla JavaScript (no frameworks or dependencies)
+- CSS3 with custom properties for theming
+- Web Speech API for Arabic text-to-speech
+- LocalStorage for progress and preferences
 
-### Progress Persistence
-All your progress is saved locally in your browser:
-- Learned names tracking
-- Quiz scores and accuracy
-- Favorite names collection
-- Daily streak counter
+## License
 
-### Responsive Arabic Typography
-Beautiful Arabic calligraphy that scales perfectly across all devices, with proper RTL (right-to-left) support when using the Arabic interface.
+MIT License — see [LICENSE](LICENSE) for details.
 
-## 🛠️ Technologies Used
+## Author
 
-- **Pure JavaScript** - No frameworks, no dependencies
-- **CSS3** - Modern styling with CSS variables for theming
-- **Web Speech API** - For Arabic text-to-speech functionality
-- **LocalStorage** - For saving user progress and preferences
-
-## 📝 Browser Compatibility
-
-Works best in modern browsers:
-- Chrome (recommended for best audio support)
-- Firefox
-- Safari
-- Edge
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest new features
-- Improve translations
-- Add more language support
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👤 Author
-
-**Abdalla Eldoumani**
+Abdalla Eldoumani
 
 ---
 
-*"He is Allah: the Creator, the Inventor, the Shaper. He ˹alone˺ has the Most Beautiful Names."* - Quran 59:24
+*"He is Allah: the Creator, the Inventor, the Shaper. He alone has the Most Beautiful Names."* — Quran 59:24
