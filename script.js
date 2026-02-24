@@ -1,5 +1,36 @@
 import { namesData } from './names.js';
 
+// Lookup Maps for O(1) access
+const namesByNumber = new Map(namesData.map(n => [n.number, n]));
+const namesByArabic = new Map(namesData.map(n => [n.arabic, n]));
+
+// Set-based lookups for O(1) membership checks
+let favoritesSet = new Set();
+let learnedSet = new Set();
+
+function rebuildLookupSets() {
+    favoritesSet = new Set(appState.progress.favorites);
+    learnedSet = new Set(appState.progress.learned);
+}
+
+// Utility: debounce
+function debounce(fn, delay) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}
+
+// Utility: Fisher-Yates shuffle
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 // App State
 let appState = {
     currentLang: 'en',
@@ -127,15 +158,24 @@ const translations = {
     }
 };
 
+// Cached DOM references
+let cachedNavTabs = null;
+
+function getNavTabs() {
+    if (!cachedNavTabs) cachedNavTabs = document.querySelectorAll('.nav-tab');
+    return cachedNavTabs;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     loadProgress();
+    rebuildLookupSets();
     initializeEventListeners();
     applyTheme();
     renderView();
     checkDailyName();
-    
+
     document.addEventListener('click', initializeAudioForMobile, { once: true });
     document.addEventListener('touchstart', initializeAudioForMobile, { once: true });
 });
@@ -218,6 +258,7 @@ function clearAllProgress() {
             totalQuestions: 0,
             favorites: []
         };
+        rebuildLookupSets();
         saveProgress();
         renderProgress();
         showNotification(t.progressCleared);
@@ -251,6 +292,7 @@ function toggleFavorite(nameNumber) {
     } else {
         appState.progress.favorites.push(nameNumber);
     }
+    rebuildLookupSets();
     saveProgress();
     renderView();
 }
@@ -273,19 +315,76 @@ function initializeEventListeners() {
     });
 
     // Navigation tabs
-    document.querySelectorAll('.nav-tab').forEach(tab => {
+    getNavTabs().forEach(tab => {
         tab.addEventListener('click', (e) => {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            getNavTabs().forEach(t => t.classList.remove('active'));
             e.target.classList.add('active');
             appState.currentView = e.target.dataset.view;
             renderView();
         });
     });
 
-    // Search bar
+    // Search bar (debounced)
+    const debouncedRender = debounce(renderNamesGrid, 180);
     document.getElementById('searchBar').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value.toLowerCase();
-        renderNamesGrid();
+        debouncedRender();
+    });
+
+    // Event delegation for names grid
+    document.getElementById('namesGrid').addEventListener('click', (e) => {
+        const studyBtn = e.target.closest('.btn-study');
+        if (studyBtn) {
+            e.stopPropagation();
+            studyName(parseInt(studyBtn.dataset.index));
+            return;
+        }
+        const favBtn = e.target.closest('.btn-favorite');
+        if (favBtn) {
+            e.stopPropagation();
+            toggleFavorite(parseInt(favBtn.dataset.number));
+            return;
+        }
+        const playBtn = e.target.closest('.btn-play');
+        if (playBtn) {
+            e.stopPropagation();
+            const nameToPlay = namesByNumber.get(parseInt(playBtn.dataset.number));
+            if (nameToPlay) playNameAudio(nameToPlay);
+            return;
+        }
+        const card = e.target.closest('.name-card');
+        if (card) {
+            const btn = card.querySelector('.btn-study');
+            if (btn) studyName(parseInt(btn.dataset.index));
+        }
+    });
+
+    // Event delegation for progress grid
+    document.getElementById('progressGrid').addEventListener('click', (e) => {
+        const studyBtn = e.target.closest('.btn-study');
+        if (studyBtn) {
+            e.stopPropagation();
+            studyName(parseInt(studyBtn.dataset.index));
+            return;
+        }
+        const favBtn = e.target.closest('.btn-favorite');
+        if (favBtn) {
+            e.stopPropagation();
+            toggleFavorite(parseInt(favBtn.dataset.number));
+            return;
+        }
+        const playBtn = e.target.closest('.btn-play');
+        if (playBtn) {
+            e.stopPropagation();
+            const nameToPlay = namesByNumber.get(parseInt(playBtn.dataset.number));
+            if (nameToPlay) playNameAudio(nameToPlay);
+            return;
+        }
+        const card = e.target.closest('.name-card');
+        if (card) {
+            const btn = card.querySelector('.btn-study');
+            if (btn) studyName(parseInt(btn.dataset.index));
+        }
     });
 
     // Study navigation
@@ -395,7 +494,7 @@ function playNameAudio(nameOrArabic) {
         nameObject = nameOrArabic;
         textToSpeak = nameOrArabic.arabicPronunciation || nameOrArabic.arabic;
     } else {
-        const name = namesData.find(n => n.arabic === nameOrArabic);
+        const name = namesByArabic.get(nameOrArabic);
         nameObject = name;
         textToSpeak = name ? (name.arabicPronunciation || name.arabic) : nameOrArabic;
     }
@@ -546,10 +645,11 @@ function renderView() {
 // Update UI text based on language
 function updateUIText() {
     const t = translations[appState.currentLang];
-    document.querySelectorAll('.nav-tab')[0].textContent = t.browse;
-    document.querySelectorAll('.nav-tab')[1].textContent = t.study;
-    document.querySelectorAll('.nav-tab')[2].textContent = t.quiz;
-    document.querySelectorAll('.nav-tab')[3].textContent = t.progress;
+    const tabs = getNavTabs();
+    tabs[0].textContent = t.browse;
+    tabs[1].textContent = t.study;
+    tabs[2].textContent = t.quiz;
+    tabs[3].textContent = t.progress;
     document.getElementById('searchBar').placeholder = t.search;
     document.getElementById('prevName').textContent = t.previous;
     document.getElementById('nextName').textContent = t.next;
@@ -563,8 +663,6 @@ function updateUIText() {
 // Render names grid with improved cards
 function renderNamesGrid() {
     const grid = document.getElementById('namesGrid');
-    grid.innerHTML = '';
-
     const filtered = namesData.filter(name => {
         if (!appState.searchTerm) return true;
         return name.arabic.includes(appState.searchTerm) ||
@@ -573,18 +671,20 @@ function renderNamesGrid() {
                 name.number.toString().includes(appState.searchTerm);
     });
 
+    const fragment = document.createDocumentFragment();
     filtered.forEach(name => {
-        const card = createNameCard(name);
-        grid.appendChild(card);
+        fragment.appendChild(createNameCard(name));
     });
+    grid.innerHTML = '';
+    grid.appendChild(fragment);
 }
 
-// Create enhanced name card
+// Create enhanced name card (event listeners handled via delegation)
 function createNameCard(name) {
     const t = translations[appState.currentLang];
-    const isFavorite = appState.progress.favorites.includes(name.number);
-    const isLearned = appState.progress.learned.includes(name.number);
-    
+    const isFavorite = favoritesSet.has(name.number);
+    const isLearned = learnedSet.has(name.number);
+
     const card = document.createElement('div');
     card.className = `name-card ${isLearned ? 'learned' : ''} ${isFavorite ? 'favorite' : ''}`;
     card.innerHTML = `
@@ -602,32 +702,7 @@ function createNameCard(name) {
             <button class="btn-action btn-play" data-number="${name.number}">🔊</button>
         </div>
     `;
-    
-    // Add event listeners
-    card.querySelector('.btn-study').addEventListener('click', (e) => {
-        e.stopPropagation();
-        studyName(parseInt(e.target.dataset.index));
-    });
-    
-    card.querySelector('.btn-favorite').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleFavorite(parseInt(e.target.dataset.number));
-    });
-    
-    card.querySelector('.btn-play').addEventListener('click', (e) => {
-        e.stopPropagation();
-        const nameNumber = parseInt(e.target.dataset.number);
-        const nameToPlay = namesData.find(n => n.number === nameNumber);
-        if (nameToPlay) {
-            playNameAudio(nameToPlay);
-        }
-    });
-    
-    // Click on card to study
-    card.addEventListener('click', () => {
-        studyName(name.number - 1);
-    });
-    
+
     return card;
 }
 
@@ -635,8 +710,8 @@ function createNameCard(name) {
 function studyName(index) {
     appState.currentStudyIndex = index;
     appState.currentView = 'study';
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-tab')[1].classList.add('active');
+    getNavTabs().forEach(t => t.classList.remove('active'));
+    getNavTabs()[1].classList.add('active');
     renderView();
 }
 
@@ -644,7 +719,7 @@ function studyName(index) {
 function playName(nameNumberOrArabic) {
     // If it's a number, find the name object
     if (typeof nameNumberOrArabic === 'number') {
-        const name = namesData.find(n => n.number === nameNumberOrArabic);
+        const name = namesByNumber.get(nameNumberOrArabic);
         if (name) {
             playNameAudio(name);
         }
@@ -657,8 +732,8 @@ function playName(nameNumberOrArabic) {
 // Render enhanced study view
 function renderStudyView() {
     const name = namesData[appState.currentStudyIndex];
-    const isFavorite = appState.progress.favorites.includes(name.number);
-    
+    const isFavorite = favoritesSet.has(name.number);
+
     document.getElementById('studyArabic').textContent = name.arabic;
     document.getElementById('studyTransliteration').textContent = name.transliteration;
     document.getElementById('studyMeaning').textContent = name.meaning[appState.currentLang];
@@ -679,8 +754,9 @@ function renderStudyView() {
     document.getElementById('nextName').disabled = appState.currentStudyIndex === namesData.length - 1;
     
     // Mark as learned
-    if (!appState.progress.learned.includes(name.number)) {
+    if (!learnedSet.has(name.number)) {
         appState.progress.learned.push(name.number);
+        rebuildLookupSets();
         saveProgress();
     }
 }
@@ -728,7 +804,7 @@ function generateOptions(correctIndex) {
         }
     }
     
-    return options.sort(() => Math.random() - 0.5);
+    return shuffleArray(options);
 }
 
 // Render quiz question
@@ -749,8 +825,8 @@ function renderQuizQuestion() {
     
     // Add transliteration for better pronunciation guidance
     document.getElementById('quizArabic').innerHTML = `
-        <div style="font-size: 2rem; margin-bottom: 0.5rem;">${q.name.arabic}</div>
-        <div style="font-size: 1rem; color: var(--text-secondary); font-style: italic;">${q.name.transliteration}</div>
+        <div class="quiz-name-arabic">${q.name.arabic}</div>
+        <div class="quiz-name-transliteration">${q.name.transliteration}</div>
     `;
     
     const optionsContainer = document.getElementById('quizOptions');
@@ -813,16 +889,16 @@ function showQuizResults() {
     }
     
     document.querySelector('.quiz-card').innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <h2 style="color: var(--primary-green); margin-bottom: 1rem;">${t.quizComplete}</h2>
+        <div class="quiz-results-container">
+            <h2 class="quiz-results-title">${t.quizComplete}</h2>
             <div class="quiz-result-score">
-                <div style="font-size: 4rem; margin: 1rem 0; font-weight: bold;">
+                <div class="quiz-results-score-number">
                     ${appState.quizData.score}/${appState.quizData.questions.length}
                 </div>
                 <div class="quiz-percentage">${percentage}%</div>
             </div>
-            <p style="font-size: 1.3rem; color: var(--text-secondary); margin: 1rem 0;">${message}</p>
-            <button class="btn-nav" id="restartQuizBtn" style="margin-top: 2rem;">${t.startNewQuiz}</button>
+            <p class="quiz-results-message">${message}</p>
+            <button class="btn-nav quiz-results-restart" id="restartQuizBtn">${t.startNewQuiz}</button>
         </div>
     `;
     
@@ -870,43 +946,40 @@ function renderProgress() {
     
     // Show learned names and favorites
     const progressGrid = document.getElementById('progressGrid');
-    progressGrid.innerHTML = '';
-    
+    const fragment = document.createDocumentFragment();
+
     // Add favorites section
     if (appState.progress.favorites.length > 0) {
         const favoritesHeader = document.createElement('h3');
         favoritesHeader.textContent = t.favorites;
-        favoritesHeader.style.gridColumn = '1 / -1';
-        favoritesHeader.style.marginTop = '2rem';
-        favoritesHeader.style.color = 'var(--primary-gold)';
-        progressGrid.appendChild(favoritesHeader);
-        
+        favoritesHeader.className = 'progress-section-header progress-section-header--favorites';
+        fragment.appendChild(favoritesHeader);
+
         appState.progress.favorites.forEach(num => {
-            const name = namesData.find(n => n.number === num);
+            const name = namesByNumber.get(num);
             if (name) {
-                const card = createNameCard(name);
-                progressGrid.appendChild(card);
+                fragment.appendChild(createNameCard(name));
             }
         });
     }
-    
+
     // Add learned names section
     if (appState.progress.learned.length > 0) {
         const learnedHeader = document.createElement('h3');
         learnedHeader.textContent = t.learned;
-        learnedHeader.style.gridColumn = '1 / -1';
-        learnedHeader.style.marginTop = '2rem';
-        learnedHeader.style.color = 'var(--primary-green)';
-        progressGrid.appendChild(learnedHeader);
-        
+        learnedHeader.className = 'progress-section-header progress-section-header--learned';
+        fragment.appendChild(learnedHeader);
+
         appState.progress.learned.forEach(num => {
-            const name = namesData.find(n => n.number === num);
-            if (name && !appState.progress.favorites.includes(num)) {
-                const card = createNameCard(name);
-                progressGrid.appendChild(card);
+            const name = namesByNumber.get(num);
+            if (name && !favoritesSet.has(num)) {
+                fragment.appendChild(createNameCard(name));
             }
         });
     }
+
+    progressGrid.innerHTML = '';
+    progressGrid.appendChild(fragment);
 }
 
 // Check and show daily name
