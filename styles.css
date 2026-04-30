@@ -890,6 +890,11 @@ button:focus-visible,
     margin-block-start: var(--space-5);
 }
 
+#nextQuestion {
+    margin-block-start: var(--space-5);
+    width: 100%;
+}
+
 .quiz-option {
     padding: var(--space-4) var(--space-5);
     background: var(--ink-low);
