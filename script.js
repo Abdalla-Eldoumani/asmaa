@@ -1175,11 +1175,16 @@ function openDailyModal() {
 function closeDailyModal() {
     const modal = document.getElementById('dailyModal');
     if (!modal) return;
-    modal.classList.remove('active');
-    modal.setAttribute('aria-hidden', 'true');
-    if (modalReturnFocus && typeof modalReturnFocus.focus === 'function') {
+    /* move focus out before aria-hiding so assistive tech does not see a
+       hidden subtree retaining focus */
+    const close = document.getElementById('modalClose');
+    if (close) close.blur();
+    if (modalReturnFocus && typeof modalReturnFocus.focus === 'function'
+        && document.contains(modalReturnFocus)) {
         modalReturnFocus.focus();
     }
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     modalReturnFocus = null;
 }
 
