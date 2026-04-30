@@ -1,19 +1,43 @@
 import { namesData } from './names.js';
 
-// Lookup Maps for O(1) access
+/* ============================================================
+   asmaa - script.js
+   single-page state, view rendering, audio, persistence
+   data source: names.js (immutable religious content)
+   ============================================================ */
+
+const STORAGE_KEYS = Object.freeze({
+    theme: 'asmaaTheme',
+    language: 'asmaaLanguage',
+    progress: 'asmaaProgress',
+    dailyName: 'lastDailyName'
+});
+
+const DEFAULT_PROGRESS = Object.freeze({
+    learned: [],
+    dailyStreak: 0,
+    lastVisit: null,
+    quizzesTaken: 0,
+    totalCorrect: 0,
+    totalQuestions: 0,
+    favorites: []
+});
+
 const namesByNumber = new Map(namesData.map(n => [n.number, n]));
 const namesByArabic = new Map(namesData.map(n => [n.arabic, n]));
 
-// Set-based lookups for O(1) membership checks
 let favoritesSet = new Set();
 let learnedSet = new Set();
 
+/**
+ * Refresh the O(1) lookup sets from the current progress arrays.
+ * Call after any mutation of `appState.progress.favorites` or `appState.progress.learned`.
+ */
 function rebuildLookupSets() {
     favoritesSet = new Set(appState.progress.favorites);
     learnedSet = new Set(appState.progress.learned);
 }
 
-// Utility: debounce
 function debounce(fn, delay) {
     let timer;
     return (...args) => {
@@ -22,7 +46,6 @@ function debounce(fn, delay) {
     };
 }
 
-// Utility: Fisher-Yates shuffle
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -31,7 +54,6 @@ function shuffleArray(array) {
     return array;
 }
 
-// App State
 let appState = {
     currentLang: 'en',
     currentView: 'browse',
@@ -44,18 +66,9 @@ let appState = {
         score: 0,
         answered: false
     },
-    progress: {
-        learned: [],
-        dailyStreak: 0,
-        lastVisit: null,
-        quizzesTaken: 0,
-        totalCorrect: 0,
-        totalQuestions: 0,
-        favorites: []
-    }
+    progress: { ...DEFAULT_PROGRESS, learned: [], favorites: [] }
 };
 
-// Translations
 const translations = {
     en: {
         browse: 'Browse',
@@ -73,7 +86,7 @@ const translations = {
         todaysName: "Today's Name to Remember",
         whatIsTheMeaning: 'What is the meaning of this name?',
         nextQuestion: 'Next Question',
-        quizComplete: 'Quiz Complete!',
+        quizComplete: 'Quiz Complete',
         yourScore: 'Your Score',
         clearProgress: 'Clear All Progress',
         confirmClear: 'Are you sure you want to clear all your progress? This cannot be undone.',
@@ -85,10 +98,10 @@ const translations = {
         noFavorites: 'No favorite names yet',
         startNewQuiz: 'Start New Quiz',
         questionsFormat: 'Question {current} of {total}',
-        perfectScore: 'Perfect! Masha\'Allah!',
-        excellentScore: 'Excellent work!',
-        goodScore: 'Good job! Keep learning!',
-        keepPracticing: 'Keep practicing, you\'ll improve!'
+        perfectScore: "Perfect. Masha'Allah",
+        excellentScore: 'Excellent work',
+        goodScore: 'Good job. Keep learning',
+        keepPracticing: "Keep practicing, you'll improve"
     },
     ar: {
         browse: 'تصفح',
@@ -106,7 +119,7 @@ const translations = {
         todaysName: 'اسم اليوم للتذكر',
         whatIsTheMeaning: 'ما معنى هذا الاسم؟',
         nextQuestion: 'السؤال التالي',
-        quizComplete: 'اكتمل الاختبار!',
+        quizComplete: 'اكتمل الاختبار',
         yourScore: 'نتيجتك',
         clearProgress: 'مسح كل التقدم',
         confirmClear: 'هل أنت متأكد من أنك تريد مسح كل تقدمك؟ لا يمكن التراجع عن هذا.',
@@ -118,10 +131,10 @@ const translations = {
         noFavorites: 'لا توجد أسماء مفضلة بعد',
         startNewQuiz: 'ابدأ اختبار جديد',
         questionsFormat: 'السؤال {current} من {total}',
-        perfectScore: 'ممتاز! ماشاء الله!',
-        excellentScore: 'عمل ممتاز!',
-        goodScore: 'عمل جيد! استمر في التعلم!',
-        keepPracticing: 'استمر في الممارسة، ستتحسن!'
+        perfectScore: 'ممتاز. ماشاء الله',
+        excellentScore: 'عمل ممتاز',
+        goodScore: 'عمل جيد. استمر في التعلم',
+        keepPracticing: 'استمر في الممارسة، ستتحسن'
     },
     fr: {
         browse: 'Parcourir',
@@ -139,7 +152,7 @@ const translations = {
         todaysName: "Le Nom d'Aujourd'hui à Retenir",
         whatIsTheMeaning: 'Quelle est la signification de ce nom?',
         nextQuestion: 'Question Suivante',
-        quizComplete: 'Quiz Terminé!',
+        quizComplete: 'Quiz Terminé',
         yourScore: 'Votre Score',
         clearProgress: 'Effacer Tous les Progrès',
         confirmClear: 'Êtes-vous sûr de vouloir effacer tous vos progrès? Cela ne peut pas être annulé.',
@@ -151,14 +164,13 @@ const translations = {
         noFavorites: 'Pas encore de noms favoris',
         startNewQuiz: 'Commencer un Nouveau Quiz',
         questionsFormat: 'Question {current} sur {total}',
-        perfectScore: 'Parfait! Masha\'Allah!',
-        excellentScore: 'Excellent travail!',
-        goodScore: 'Bon travail! Continuez à apprendre!',
-        keepPracticing: 'Continuez à pratiquer, vous vous améliorerez!'
+        perfectScore: "Parfait. Masha'Allah",
+        excellentScore: 'Excellent travail',
+        goodScore: 'Bon travail. Continuez à apprendre',
+        keepPracticing: 'Continuez à pratiquer, vous vous améliorerez'
     }
 };
 
-// Cached DOM references
 let cachedNavTabs = null;
 
 function getNavTabs() {
@@ -166,13 +178,89 @@ function getNavTabs() {
     return cachedNavTabs;
 }
 
-// Initialize
+/* ============================================================
+   storage helpers
+   localStorage may be unavailable (private mode, disabled, full)
+   or contain tampered/stale data; every read defends both shape
+   and parse failures
+   ============================================================ */
+
+function readStorage(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (err) {
+        return null;
+    }
+}
+
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (err) {
+        /* private mode or quota exceeded; persistence is best-effort */
+    }
+}
+
+/**
+ * Read and validate progress from localStorage. Discards any field with the
+ * wrong shape and falls back to the typed default. Never throws.
+ */
+function readProgress() {
+    const raw = readStorage(STORAGE_KEYS.progress);
+    if (!raw) return { ...DEFAULT_PROGRESS, learned: [], favorites: [] };
+
+    let parsed;
+    try {
+        parsed = JSON.parse(raw);
+    } catch (err) {
+        return { ...DEFAULT_PROGRESS, learned: [], favorites: [] };
+    }
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        return { ...DEFAULT_PROGRESS, learned: [], favorites: [] };
+    }
+
+    const onlyIntegers = arr => arr.filter(n => Number.isInteger(n) && n >= 1 && n <= 99);
+
+    return {
+        learned: Array.isArray(parsed.learned) ? onlyIntegers(parsed.learned) : [],
+        dailyStreak: Number.isFinite(parsed.dailyStreak) && parsed.dailyStreak >= 0
+            ? parsed.dailyStreak
+            : 0,
+        lastVisit: typeof parsed.lastVisit === 'string' ? parsed.lastVisit : null,
+        quizzesTaken: Number.isFinite(parsed.quizzesTaken) && parsed.quizzesTaken >= 0
+            ? parsed.quizzesTaken
+            : 0,
+        totalCorrect: Number.isFinite(parsed.totalCorrect) && parsed.totalCorrect >= 0
+            ? parsed.totalCorrect
+            : 0,
+        totalQuestions: Number.isFinite(parsed.totalQuestions) && parsed.totalQuestions >= 0
+            ? parsed.totalQuestions
+            : 0,
+        favorites: Array.isArray(parsed.favorites) ? onlyIntegers(parsed.favorites) : []
+    };
+}
+
+function readTheme() {
+    const raw = readStorage(STORAGE_KEYS.theme);
+    return raw === 'light' || raw === 'dark' ? raw : null;
+}
+
+function readLanguage() {
+    const raw = readStorage(STORAGE_KEYS.language);
+    return raw === 'en' || raw === 'ar' || raw === 'fr' ? raw : null;
+}
+
+/* ============================================================
+   bootstrap
+   ============================================================ */
+
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     loadProgress();
     rebuildLookupSets();
     initializeEventListeners();
     applyTheme();
+    applyDirection();
     renderView();
     checkDailyName();
 
@@ -180,53 +268,58 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchstart', initializeAudioForMobile, { once: true });
 });
 
-// Load settings from localStorage
 function loadSettings() {
-    const savedTheme = localStorage.getItem('asmaaTheme');
-    const savedLang = localStorage.getItem('asmaaLanguage');
-    
-    if (savedTheme) {
-        appState.currentTheme = savedTheme;
-    }
-    
-    if (savedLang) {
-        appState.currentLang = savedLang;
-        document.body.classList.toggle('rtl', savedLang === 'ar');
-    }
+    const savedTheme = readTheme();
+    const savedLang = readLanguage();
+    const prefersDark = window.matchMedia
+        && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    appState.currentTheme = savedTheme ?? (prefersDark ? 'dark' : 'light');
+    appState.currentLang = savedLang ?? 'en';
 }
 
-// Save settings to localStorage
 function saveSettings() {
-    localStorage.setItem('asmaaTheme', appState.currentTheme);
-    localStorage.setItem('asmaaLanguage', appState.currentLang);
+    writeStorage(STORAGE_KEYS.theme, appState.currentTheme);
+    writeStorage(STORAGE_KEYS.language, appState.currentLang);
 }
 
-// Apply theme
 function applyTheme() {
     document.body.setAttribute('data-theme', appState.currentTheme);
-    document.getElementById('themeToggle').textContent = appState.currentTheme === 'light' ? '🌙' : '☀️';
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) {
+        toggle.textContent = appState.currentTheme === 'light' ? '🌙' : '☀️';
+        toggle.setAttribute('aria-label',
+            appState.currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+    }
 }
 
-// Load progress from localStorage
+/**
+ * Sync direction and `lang` on the document root with the active language.
+ * Body keeps the legacy `.rtl` class so older selectors continue to match.
+ */
+function applyDirection() {
+    const dir = appState.currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+    document.documentElement.lang = appState.currentLang;
+    document.body.classList.toggle('rtl', dir === 'rtl');
+}
+
+/**
+ * Hydrate progress and update the daily-streak. A streak increments only when
+ * the previous visit was the calendar day immediately before today; otherwise
+ * it resets to 1.
+ */
 function loadProgress() {
-    const saved = localStorage.getItem('asmaaProgress');
-    if (saved) {
-        appState.progress = JSON.parse(saved);
-        // Ensure favorites array exists for older saved data
-        if (!appState.progress.favorites) {
-            appState.progress.favorites = [];
-        }
-    }
-    
-    // Check and update streak
+    appState.progress = readProgress();
+
     const today = new Date().toDateString();
     const lastVisit = appState.progress.lastVisit;
-    
+
     if (lastVisit) {
         const lastDate = new Date(lastVisit).toDateString();
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        
+
         if (lastDate === yesterday.toDateString()) {
             appState.progress.dailyStreak++;
         } else if (lastDate !== today) {
@@ -235,28 +328,23 @@ function loadProgress() {
     } else {
         appState.progress.dailyStreak = 1;
     }
-    
+
     appState.progress.lastVisit = new Date().toISOString();
     saveProgress();
 }
 
-// Save progress to localStorage
 function saveProgress() {
-    localStorage.setItem('asmaaProgress', JSON.stringify(appState.progress));
+    writeStorage(STORAGE_KEYS.progress, JSON.stringify(appState.progress));
 }
 
-// Clear all progress
 function clearAllProgress() {
     const t = translations[appState.currentLang];
     if (confirm(t.confirmClear)) {
         appState.progress = {
+            ...DEFAULT_PROGRESS,
             learned: [],
-            dailyStreak: 0,
-            lastVisit: new Date().toISOString(),
-            quizzesTaken: 0,
-            totalCorrect: 0,
-            totalQuestions: 0,
-            favorites: []
+            favorites: [],
+            lastVisit: new Date().toISOString()
         };
         rebuildLookupSets();
         saveProgress();
@@ -265,26 +353,21 @@ function clearAllProgress() {
     }
 }
 
-// Show notification
 function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'notification';
+    notification.setAttribute('role', 'status');
     notification.textContent = message;
     document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 100);
-    
+
+    requestAnimationFrame(() => notification.classList.add('show'));
+
     setTimeout(() => {
         notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
+        setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Toggle favorite
 function toggleFavorite(nameNumber) {
     const index = appState.progress.favorites.indexOf(nameNumber);
     if (index > -1) {
@@ -297,97 +380,42 @@ function toggleFavorite(nameNumber) {
     renderView();
 }
 
-// Initialize Event Listeners
+/* ============================================================
+   event wiring
+   ============================================================ */
+
 function initializeEventListeners() {
-    // Language selector
     document.getElementById('languageSelector').addEventListener('change', (e) => {
         appState.currentLang = e.target.value;
-        document.body.classList.toggle('rtl', appState.currentLang === 'ar');
+        applyDirection();
         saveSettings();
         renderView();
     });
 
-    // Theme toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
         appState.currentTheme = appState.currentTheme === 'light' ? 'dark' : 'light';
         applyTheme();
         saveSettings();
     });
 
-    // Navigation tabs
     getNavTabs().forEach(tab => {
         tab.addEventListener('click', (e) => {
-            getNavTabs().forEach(t => t.classList.remove('active'));
-            e.target.classList.add('active');
-            appState.currentView = e.target.dataset.view;
+            const view = e.currentTarget.dataset.view;
+            appState.currentView = view;
+            setActiveTab(view);
             renderView();
         });
     });
 
-    // Search bar (debounced)
     const debouncedRender = debounce(renderNamesGrid, 180);
     document.getElementById('searchBar').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value.toLowerCase();
         debouncedRender();
     });
 
-    // Event delegation for names grid
-    document.getElementById('namesGrid').addEventListener('click', (e) => {
-        const studyBtn = e.target.closest('.btn-study');
-        if (studyBtn) {
-            e.stopPropagation();
-            studyName(parseInt(studyBtn.dataset.index));
-            return;
-        }
-        const favBtn = e.target.closest('.btn-favorite');
-        if (favBtn) {
-            e.stopPropagation();
-            toggleFavorite(parseInt(favBtn.dataset.number));
-            return;
-        }
-        const playBtn = e.target.closest('.btn-play');
-        if (playBtn) {
-            e.stopPropagation();
-            const nameToPlay = namesByNumber.get(parseInt(playBtn.dataset.number));
-            if (nameToPlay) playNameAudio(nameToPlay);
-            return;
-        }
-        const card = e.target.closest('.name-card');
-        if (card) {
-            const btn = card.querySelector('.btn-study');
-            if (btn) studyName(parseInt(btn.dataset.index));
-        }
-    });
+    document.getElementById('namesGrid').addEventListener('click', handleGridClick);
+    document.getElementById('progressGrid').addEventListener('click', handleGridClick);
 
-    // Event delegation for progress grid
-    document.getElementById('progressGrid').addEventListener('click', (e) => {
-        const studyBtn = e.target.closest('.btn-study');
-        if (studyBtn) {
-            e.stopPropagation();
-            studyName(parseInt(studyBtn.dataset.index));
-            return;
-        }
-        const favBtn = e.target.closest('.btn-favorite');
-        if (favBtn) {
-            e.stopPropagation();
-            toggleFavorite(parseInt(favBtn.dataset.number));
-            return;
-        }
-        const playBtn = e.target.closest('.btn-play');
-        if (playBtn) {
-            e.stopPropagation();
-            const nameToPlay = namesByNumber.get(parseInt(playBtn.dataset.number));
-            if (nameToPlay) playNameAudio(nameToPlay);
-            return;
-        }
-        const card = e.target.closest('.name-card');
-        if (card) {
-            const btn = card.querySelector('.btn-study');
-            if (btn) studyName(parseInt(btn.dataset.index));
-        }
-    });
-
-    // Study navigation
     document.getElementById('prevName').addEventListener('click', () => {
         if (appState.currentStudyIndex > 0) {
             appState.currentStudyIndex--;
@@ -402,18 +430,16 @@ function initializeEventListeners() {
         }
     });
 
-    // Play audio
     document.getElementById('playAudio').addEventListener('click', () => {
         const name = namesData[appState.currentStudyIndex];
         playNameAudio(name);
     });
 
-    // Modal close
-    document.getElementById('modalClose').addEventListener('click', () => {
-        document.getElementById('dailyModal').classList.remove('active');
+    document.getElementById('modalClose').addEventListener('click', closeDailyModal);
+    document.getElementById('dailyModal').addEventListener('click', (e) => {
+        if (e.target.id === 'dailyModal') closeDailyModal();
     });
 
-    // Next question in quiz
     document.getElementById('nextQuestion').addEventListener('click', () => {
         appState.quizData.currentQuestion++;
         if (appState.quizData.currentQuestion < appState.quizData.questions.length) {
@@ -423,226 +449,208 @@ function initializeEventListeners() {
         }
     });
 
-    // Keyboard navigation for study mode
+    document.querySelector('.quiz-card').addEventListener('click', (e) => {
+        const restart = e.target.closest('#restartQuizBtn');
+        if (restart) startQuiz();
+    });
+
     document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('dailyModal');
+            if (modal && modal.classList.contains('active')) {
+                closeDailyModal();
+                return;
+            }
+        }
         if (appState.currentView === 'study') {
             if (e.key === 'ArrowLeft' && appState.currentStudyIndex > 0) {
                 appState.currentStudyIndex--;
                 renderStudyView();
-            } else if (e.key === 'ArrowRight' && appState.currentStudyIndex < namesData.length - 1) {
+            } else if (e.key === 'ArrowRight'
+                       && appState.currentStudyIndex < namesData.length - 1) {
                 appState.currentStudyIndex++;
                 renderStudyView();
-            } else if (e.key === ' ') {
+            } else if (e.key === ' ' && e.target === document.body) {
                 e.preventDefault();
-                const name = namesData[appState.currentStudyIndex];
-                playNameAudio(name);
+                playNameAudio(namesData[appState.currentStudyIndex]);
             }
         }
     });
 }
 
-// Audio initialization flag for mobile
+function handleGridClick(e) {
+    const studyBtn = e.target.closest('.btn-study');
+    if (studyBtn) {
+        e.stopPropagation();
+        studyName(parseInt(studyBtn.dataset.index, 10));
+        return;
+    }
+    const favBtn = e.target.closest('.btn-favorite');
+    if (favBtn) {
+        e.stopPropagation();
+        toggleFavorite(parseInt(favBtn.dataset.number, 10));
+        return;
+    }
+    const playBtn = e.target.closest('.btn-play');
+    if (playBtn) {
+        e.stopPropagation();
+        const name = namesByNumber.get(parseInt(playBtn.dataset.number, 10));
+        if (name) playNameAudio(name);
+        return;
+    }
+    const card = e.target.closest('.name-card');
+    if (card) {
+        const btn = card.querySelector('.btn-study');
+        if (btn) studyName(parseInt(btn.dataset.index, 10));
+    }
+}
+
+function setActiveTab(viewName) {
+    getNavTabs().forEach(tab => {
+        const isActive = tab.dataset.view === viewName;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+}
+
+/* ============================================================
+   audio (Web Speech API with fallback chain)
+   On iOS the SpeechSynthesisUtterance API requires a real user gesture
+   before it can speak; the one-time silent utterance below primes the
+   subsystem during the first click or touchstart.
+   ============================================================ */
+
 let audioInitialized = false;
 
-// Initialize audio on first user interaction (for mobile)
 function initializeAudioForMobile() {
     if (audioInitialized) return;
-    
-    // Try to initialize speech synthesis
-    if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech
-        speechSynthesis.cancel();
-        
-        const silentUtterance = new SpeechSynthesisUtterance('');
-        silentUtterance.volume = 0;
-        silentUtterance.lang = 'ar-SA';
-        
-        try {
-            speechSynthesis.speak(silentUtterance);
-        } catch (e) {
-            console.log('Silent speech failed:', e);
-        }
-        
-        const checkVoices = () => {
-            const voices = speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                audioInitialized = true;
-                console.log('Audio initialized with', voices.length, 'voices');
-            }
-        };
-        
-        checkVoices();
-        
-        if (!audioInitialized) {
-            speechSynthesis.addEventListener('voiceschanged', checkVoices);
-        }
+    if (!('speechSynthesis' in window)) {
+        audioInitialized = true;
+        return;
     }
-    
+    speechSynthesis.cancel();
+    const silent = new SpeechSynthesisUtterance('');
+    silent.volume = 0;
+    silent.lang = 'ar-SA';
+    try {
+        speechSynthesis.speak(silent);
+    } catch (err) {
+        /* iOS sometimes throws on the priming call; safe to ignore */
+    }
     audioInitialized = true;
 }
 
-// Play name audio with visual feedback and mobile compatibility
+/**
+ * Speak a name. Accepts either a name object or a literal Arabic string;
+ * falls back through Web Speech API, ResponsiveVoice (if loaded), and finally
+ * a transliteration toast.
+ */
 function playNameAudio(nameOrArabic) {
-    // Initialize audio on mobile if not done yet
     initializeAudioForMobile();
-    
-    // Determine what text to pronounce
-    let textToSpeak;
+
     let nameObject = null;
-    
+    let textToSpeak;
+
     if (typeof nameOrArabic === 'object' && nameOrArabic !== null) {
         nameObject = nameOrArabic;
         textToSpeak = nameOrArabic.arabicPronunciation || nameOrArabic.arabic;
     } else {
-        const name = namesByArabic.get(nameOrArabic);
-        nameObject = name;
-        textToSpeak = name ? (name.arabicPronunciation || name.arabic) : nameOrArabic;
+        nameObject = namesByArabic.get(nameOrArabic) || null;
+        textToSpeak = nameObject
+            ? (nameObject.arabicPronunciation || nameObject.arabic)
+            : nameOrArabic;
     }
-    
-    // Visual feedback for all play buttons
+
     const allPlayButtons = document.querySelectorAll('.btn-play, #playAudio');
     allPlayButtons.forEach(btn => btn.classList.add('playing'));
-    
     const resetButtons = () => {
         allPlayButtons.forEach(btn => btn.classList.remove('playing'));
     };
-    
-    // Primary method: Web Speech API
+
     if ('speechSynthesis' in window) {
         try {
-            // Cancel any ongoing speech
             speechSynthesis.cancel();
-            
+
             const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'ar-SA'; // More specific Arabic locale
-            utterance.rate = 0.75; // Slightly slower for clarity
+            utterance.lang = 'ar-SA';
+            utterance.rate = 0.75;
             utterance.pitch = 1;
             utterance.volume = 1;
-            
-            // Handle end of speech
             utterance.onend = resetButtons;
-            utterance.onerror = (e) => {
-                console.log('Speech synthesis error:', e);
+            utterance.onerror = () => {
                 resetButtons();
-                // Try fallback method
                 playNameAudioFallback(nameObject, resetButtons);
             };
-            
-            // For iOS/Safari - need to handle voices differently
+
             const voices = speechSynthesis.getVoices();
-            const arabicVoice = voices.find(voice => 
-                voice.lang.startsWith('ar') || 
-                voice.name.includes('Arabic')
-            );
-            
-            if (arabicVoice) {
-                utterance.voice = arabicVoice;
-            }
-            
-            // Speak with a small delay for mobile
-            setTimeout(() => {
-                speechSynthesis.speak(utterance);
-            }, 10);
-            
-        } catch (error) {
-            console.error('Speech synthesis failed:', error);
+            const arabicVoice = voices.find(v =>
+                v.lang.startsWith('ar') || /arabic/i.test(v.name));
+            if (arabicVoice) utterance.voice = arabicVoice;
+
+            setTimeout(() => speechSynthesis.speak(utterance), 10);
+            return;
+        } catch (err) {
             resetButtons();
-            // Try fallback method
-            playNameAudioFallback(nameObject, resetButtons);
         }
-    } else {
-        // Fallback for browsers without speech synthesis
-        playNameAudioFallback(nameObject, resetButtons);
     }
+
+    playNameAudioFallback(nameObject, resetButtons);
 }
 
-// Fallback audio method with alternative approaches
 function playNameAudioFallback(nameObject, callback) {
     if (!nameObject) {
         if (callback) callback();
         return;
     }
-    
-    // Method 1: Try ResponsiveVoice if available (free TTS library)
+
     if (typeof responsiveVoice !== 'undefined') {
         try {
-            responsiveVoice.speak(nameObject.arabic, "Arabic", {
+            responsiveVoice.speak(nameObject.arabic, 'Arabic', {
                 onend: callback,
                 onerror: callback,
                 rate: 0.8
             });
             return;
-        } catch (e) {
-            console.log('ResponsiveVoice not available');
+        } catch (err) {
+            /* fall through to transliteration toast */
         }
     }
-    
-    // Method 2: Use a simple alert as last resort to show the pronunciation
+
     if (nameObject.transliteration) {
-        // Show a temporary notification with the transliteration
-        const notification = document.createElement('div');
-        notification.className = 'audio-fallback-notification';
-        notification.innerHTML = `
-            <div style="
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: var(--primary-green);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                z-index: 10000;
-                text-align: center;
-                font-size: 1.2rem;
-            ">
-                🔊 ${nameObject.transliteration}
-                <div style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;">
-                    Pronunciation guide
-                </div>
-            </div>
-        `;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-            if (callback) callback();
-        }, 3000);
-    } else {
-        if (callback) callback();
+        showNotification(`🔊 ${nameObject.transliteration}`);
+        if (callback) setTimeout(callback, 3000);
+    } else if (callback) {
+        callback();
     }
 }
 
-// Render current view
+/* ============================================================
+   view rendering
+   ============================================================ */
+
 function renderView() {
     document.querySelectorAll('.view-content').forEach(view => {
-        view.style.display = 'none';
+        view.classList.remove('is-active');
+        view.style.display = '';
     });
 
-    switch(appState.currentView) {
-        case 'browse':
-            document.querySelector('.browse-view').style.display = 'block';
-            renderNamesGrid();
-            break;
-        case 'study':
-            document.querySelector('.study-view').style.display = 'block';
-            renderStudyView();
-            break;
-        case 'quiz':
-            document.querySelector('.quiz-view').style.display = 'block';
-            startQuiz();
-            break;
-        case 'progress':
-            document.querySelector('.progress-view').style.display = 'block';
-            renderProgress();
-            break;
+    const viewMap = {
+        browse: { selector: '.browse-view', render: renderNamesGrid },
+        study: { selector: '.study-view', render: renderStudyView },
+        quiz: { selector: '.quiz-view', render: startQuiz },
+        progress: { selector: '.progress-view', render: renderProgress }
+    };
+
+    const target = viewMap[appState.currentView];
+    if (target) {
+        const el = document.querySelector(target.selector);
+        if (el) el.classList.add('is-active');
+        target.render();
     }
 
     updateUIText();
 }
 
-// Update UI text based on language
 function updateUIText() {
     const t = translations[appState.currentLang];
     const tabs = getNavTabs();
@@ -650,86 +658,139 @@ function updateUIText() {
     tabs[1].textContent = t.study;
     tabs[2].textContent = t.quiz;
     tabs[3].textContent = t.progress;
-    document.getElementById('searchBar').placeholder = t.search;
-    document.getElementById('prevName').textContent = t.previous;
-    document.getElementById('nextName').textContent = t.next;
-    document.getElementById('playAudio').innerHTML = `${t.play}`;
-    document.querySelector('.daily-name-header').textContent = t.todaysName;
-    
-    // Update language selector
-    document.getElementById('languageSelector').value = appState.currentLang;
+
+    const search = document.getElementById('searchBar');
+    if (search) {
+        search.placeholder = t.search;
+        search.setAttribute('aria-label', t.search);
+    }
+
+    const prev = document.getElementById('prevName');
+    const next = document.getElementById('nextName');
+    const play = document.getElementById('playAudio');
+    if (prev) prev.textContent = t.previous;
+    if (next) next.textContent = t.next;
+    if (play) play.textContent = t.play;
+
+    const dailyHeader = document.querySelector('.daily-name-header');
+    if (dailyHeader) dailyHeader.textContent = t.todaysName;
+
+    const langSelector = document.getElementById('languageSelector');
+    if (langSelector) langSelector.value = appState.currentLang;
+
+    const nextQuestionBtn = document.getElementById('nextQuestion');
+    if (nextQuestionBtn) nextQuestionBtn.textContent = t.nextQuestion;
 }
 
-// Render names grid with improved cards
+/* ============================================================
+   browse view
+   ============================================================ */
+
 function renderNamesGrid() {
     const grid = document.getElementById('namesGrid');
-    const filtered = namesData.filter(name => {
-        if (!appState.searchTerm) return true;
-        return name.arabic.includes(appState.searchTerm) ||
-                name.transliteration.toLowerCase().includes(appState.searchTerm) ||
-                name.meaning[appState.currentLang].toLowerCase().includes(appState.searchTerm) ||
-                name.number.toString().includes(appState.searchTerm);
-    });
+    const term = appState.searchTerm;
+    const filtered = term
+        ? namesData.filter(name =>
+            name.arabic.includes(term)
+            || name.transliteration.toLowerCase().includes(term)
+            || name.meaning[appState.currentLang].toLowerCase().includes(term)
+            || name.number.toString().includes(term))
+        : namesData;
 
     const fragment = document.createDocumentFragment();
-    filtered.forEach(name => {
-        fragment.appendChild(createNameCard(name));
-    });
-    grid.innerHTML = '';
-    grid.appendChild(fragment);
+    filtered.forEach(name => fragment.appendChild(createNameCard(name)));
+    grid.replaceChildren(fragment);
 }
 
-// Create enhanced name card (event listeners handled via delegation)
 function createNameCard(name) {
     const t = translations[appState.currentLang];
     const isFavorite = favoritesSet.has(name.number);
     const isLearned = learnedSet.has(name.number);
 
-    const card = document.createElement('div');
-    card.className = `name-card ${isLearned ? 'learned' : ''} ${isFavorite ? 'favorite' : ''}`;
-    card.innerHTML = `
-        <div class="name-number">${name.number}</div>
-        ${isFavorite ? '<div class="favorite-badge">❤️</div>' : ''}
-        ${isLearned ? '<div class="learned-badge">✓</div>' : ''}
-        <div class="name-arabic arabic-text">${name.arabic}</div>
-        <div class="name-transliteration">${name.transliteration}</div>
-        <div class="name-meaning">${name.meaning[appState.currentLang]}</div>
-        <div class="name-actions">
-            <button class="btn-action btn-study" data-index="${name.number - 1}">${t.studyButton}</button>
-            <button class="btn-action btn-favorite" data-number="${name.number}">
-                ${isFavorite ? '💔' : '❤️'}
-            </button>
-            <button class="btn-action btn-play" data-number="${name.number}">🔊</button>
-        </div>
-    `;
+    const card = document.createElement('article');
+    card.className = `name-card${isLearned ? ' learned' : ''}${isFavorite ? ' favorite' : ''}`;
 
+    const number = document.createElement('div');
+    number.className = 'name-number';
+    number.textContent = name.number;
+    card.appendChild(number);
+
+    if (isFavorite) {
+        const favBadge = document.createElement('div');
+        favBadge.className = 'favorite-badge';
+        favBadge.setAttribute('aria-label', 'Favorite');
+        favBadge.textContent = '❤️';
+        card.appendChild(favBadge);
+    }
+
+    if (isLearned) {
+        const learnedBadge = document.createElement('div');
+        learnedBadge.className = 'learned-badge';
+        learnedBadge.setAttribute('aria-label', 'Learned');
+        learnedBadge.textContent = '✓';
+        card.appendChild(learnedBadge);
+    }
+
+    const arabic = document.createElement('div');
+    arabic.className = 'name-arabic arabic-text';
+    arabic.textContent = name.arabic;
+    arabic.setAttribute('lang', 'ar');
+    arabic.setAttribute('dir', 'rtl');
+    card.appendChild(arabic);
+
+    const trans = document.createElement('div');
+    trans.className = 'name-transliteration';
+    trans.textContent = name.transliteration;
+    trans.setAttribute('dir', 'ltr');
+    card.appendChild(trans);
+
+    const meaning = document.createElement('div');
+    meaning.className = 'name-meaning';
+    meaning.textContent = name.meaning[appState.currentLang];
+    card.appendChild(meaning);
+
+    const actions = document.createElement('div');
+    actions.className = 'name-actions';
+
+    const studyBtn = document.createElement('button');
+    studyBtn.type = 'button';
+    studyBtn.className = 'btn-action btn-study';
+    studyBtn.dataset.index = String(name.number - 1);
+    studyBtn.textContent = t.studyButton;
+    actions.appendChild(studyBtn);
+
+    const favBtn = document.createElement('button');
+    favBtn.type = 'button';
+    favBtn.className = 'btn-action btn-favorite';
+    favBtn.dataset.number = String(name.number);
+    favBtn.setAttribute('aria-label',
+        isFavorite ? 'Remove from favorites' : 'Add to favorites');
+    favBtn.textContent = isFavorite ? '💔' : '❤️';
+    actions.appendChild(favBtn);
+
+    const playBtn = document.createElement('button');
+    playBtn.type = 'button';
+    playBtn.className = 'btn-action btn-play';
+    playBtn.dataset.number = String(name.number);
+    playBtn.setAttribute('aria-label', `Pronounce ${name.transliteration}`);
+    playBtn.textContent = '🔊';
+    actions.appendChild(playBtn);
+
+    card.appendChild(actions);
     return card;
 }
 
-// Study specific name
+/* ============================================================
+   study view
+   ============================================================ */
+
 function studyName(index) {
     appState.currentStudyIndex = index;
     appState.currentView = 'study';
-    getNavTabs().forEach(t => t.classList.remove('active'));
-    getNavTabs()[1].classList.add('active');
+    setActiveTab('study');
     renderView();
 }
 
-// Play name audio (global function for onclick) - Updated
-function playName(nameNumberOrArabic) {
-    // If it's a number, find the name object
-    if (typeof nameNumberOrArabic === 'number') {
-        const name = namesByNumber.get(nameNumberOrArabic);
-        if (name) {
-            playNameAudio(name);
-        }
-    } else {
-        // Otherwise pass it as is
-        playNameAudio(nameNumberOrArabic);
-    }
-}
-
-// Render enhanced study view
 function renderStudyView() {
     const name = namesData[appState.currentStudyIndex];
     const isFavorite = favoritesSet.has(name.number);
@@ -738,22 +799,29 @@ function renderStudyView() {
     document.getElementById('studyTransliteration').textContent = name.transliteration;
     document.getElementById('studyMeaning').textContent = name.meaning[appState.currentLang];
     document.getElementById('studyReflection').textContent = name.reflection[appState.currentLang];
-    
-    // Add favorite button to study view
+
     const studyCard = document.querySelector('.study-card');
     let favoriteBtn = studyCard.querySelector('.study-favorite-btn');
     if (!favoriteBtn) {
         favoriteBtn = document.createElement('button');
+        favoriteBtn.type = 'button';
         favoriteBtn.className = 'study-favorite-btn';
+        favoriteBtn.addEventListener('click', () => toggleFavorite(name.number));
         studyCard.insertBefore(favoriteBtn, studyCard.firstChild);
+    } else {
+        const fresh = favoriteBtn.cloneNode(false);
+        fresh.addEventListener('click', () => toggleFavorite(name.number));
+        favoriteBtn.replaceWith(fresh);
+        favoriteBtn = fresh;
     }
-    favoriteBtn.innerHTML = isFavorite ? '💔' : '❤️';
-    favoriteBtn.onclick = () => toggleFavorite(name.number);
-    
+    favoriteBtn.textContent = isFavorite ? '💔' : '❤️';
+    favoriteBtn.setAttribute('aria-label',
+        isFavorite ? 'Remove from favorites' : 'Add to favorites');
+
     document.getElementById('prevName').disabled = appState.currentStudyIndex === 0;
-    document.getElementById('nextName').disabled = appState.currentStudyIndex === namesData.length - 1;
-    
-    // Mark as learned
+    document.getElementById('nextName').disabled
+        = appState.currentStudyIndex === namesData.length - 1;
+
     if (!learnedSet.has(name.number)) {
         appState.progress.learned.push(name.number);
         rebuildLookupSets();
@@ -761,7 +829,10 @@ function renderStudyView() {
     }
 }
 
-// Start quiz
+/* ============================================================
+   quiz
+   ============================================================ */
+
 function startQuiz() {
     appState.quizData = {
         currentQuestion: 0,
@@ -769,15 +840,15 @@ function startQuiz() {
         score: 0,
         answered: false
     };
+    rebuildQuizCardScaffold();
     renderQuizQuestion();
 }
 
-// Generate quiz questions
 function generateQuizQuestions(count) {
     const questions = [];
     const used = new Set();
-    
-    while (questions.length < count && questions.length < namesData.length) {
+
+    while (questions.length < count && used.size < namesData.length) {
         const index = Math.floor(Math.random() * namesData.length);
         if (!used.has(index)) {
             used.add(index);
@@ -787,15 +858,13 @@ function generateQuizQuestions(count) {
             });
         }
     }
-    
     return questions;
 }
 
-// Generate quiz options
 function generateOptions(correctIndex) {
     const options = [namesData[correctIndex].meaning[appState.currentLang]];
     const used = new Set([correctIndex]);
-    
+
     while (options.length < 4) {
         const index = Math.floor(Math.random() * namesData.length);
         if (!used.has(index)) {
@@ -803,172 +872,256 @@ function generateOptions(correctIndex) {
             options.push(namesData[index].meaning[appState.currentLang]);
         }
     }
-    
     return shuffleArray(options);
 }
 
-// Render quiz question
+/**
+ * Restore the original quiz card markup. After `showQuizResults` we replace
+ * the card body with a results panel; this rebuilds it before each new quiz.
+ */
+function rebuildQuizCardScaffold() {
+    const card = document.querySelector('.quiz-card');
+    if (!card) return;
+    if (card.querySelector('#quizQuestion')) return;
+
+    card.replaceChildren();
+
+    const progressWrap = document.createElement('div');
+    progressWrap.className = 'quiz-progress';
+    const bar = document.createElement('div');
+    bar.className = 'progress-bar';
+    bar.setAttribute('role', 'progressbar');
+    bar.setAttribute('aria-label', 'Quiz progress');
+    bar.setAttribute('aria-valuemin', '0');
+    bar.setAttribute('aria-valuemax', '100');
+    bar.setAttribute('aria-valuenow', '0');
+    const fill = document.createElement('div');
+    fill.className = 'progress-fill';
+    fill.id = 'quizProgress';
+    bar.appendChild(fill);
+    const counter = document.createElement('div');
+    counter.className = 'question-counter';
+    counter.id = 'questionCounter';
+    counter.setAttribute('aria-live', 'polite');
+    progressWrap.appendChild(bar);
+    progressWrap.appendChild(counter);
+
+    const question = document.createElement('div');
+    question.className = 'quiz-question';
+    question.id = 'quizQuestion';
+
+    const arabic = document.createElement('div');
+    arabic.className = 'quiz-arabic-display arabic-text';
+    arabic.id = 'quizArabic';
+
+    const options = document.createElement('div');
+    options.className = 'quiz-options';
+    options.id = 'quizOptions';
+    options.setAttribute('role', 'group');
+    options.setAttribute('aria-label', 'Answer options');
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.id = 'nextQuestion';
+    nextBtn.className = 'btn-nav hidden';
+    nextBtn.textContent = translations[appState.currentLang].nextQuestion;
+    nextBtn.addEventListener('click', () => {
+        appState.quizData.currentQuestion++;
+        if (appState.quizData.currentQuestion < appState.quizData.questions.length) {
+            renderQuizQuestion();
+        } else {
+            showQuizResults();
+        }
+    });
+
+    card.appendChild(progressWrap);
+    card.appendChild(question);
+    card.appendChild(arabic);
+    card.appendChild(options);
+    card.appendChild(nextBtn);
+}
+
 function renderQuizQuestion() {
     const q = appState.quizData.questions[appState.quizData.currentQuestion];
     const t = translations[appState.currentLang];
-    
-    // Update question counter with proper translation
-    const questionCounterText = t.questionsFormat
+
+    const counterText = t.questionsFormat
         .replace('{current}', appState.quizData.currentQuestion + 1)
         .replace('{total}', appState.quizData.questions.length);
-    document.getElementById('questionCounter').innerHTML = questionCounterText;
-    
-    document.getElementById('quizProgress').style.width = 
-        `${((appState.quizData.currentQuestion + 1) / appState.quizData.questions.length) * 100}%`;
-    
+    document.getElementById('questionCounter').textContent = counterText;
+
+    const fillPct = ((appState.quizData.currentQuestion + 1)
+        / appState.quizData.questions.length) * 100;
+    document.getElementById('quizProgress').style.width = `${fillPct}%`;
+
+    const bar = document.querySelector('.quiz-progress .progress-bar');
+    if (bar) bar.setAttribute('aria-valuenow', String(Math.round(fillPct)));
+
     document.getElementById('quizQuestion').textContent = t.whatIsTheMeaning;
-    
-    // Add transliteration for better pronunciation guidance
-    document.getElementById('quizArabic').innerHTML = `
-        <div class="quiz-name-arabic">${q.name.arabic}</div>
-        <div class="quiz-name-transliteration">${q.name.transliteration}</div>
-    `;
-    
+
+    const quizArabic = document.getElementById('quizArabic');
+    quizArabic.replaceChildren();
+    const arabicLine = document.createElement('div');
+    arabicLine.className = 'quiz-name-arabic';
+    arabicLine.textContent = q.name.arabic;
+    arabicLine.setAttribute('lang', 'ar');
+    arabicLine.setAttribute('dir', 'rtl');
+    const transLine = document.createElement('div');
+    transLine.className = 'quiz-name-transliteration';
+    transLine.textContent = q.name.transliteration;
+    transLine.setAttribute('dir', 'ltr');
+    quizArabic.appendChild(arabicLine);
+    quizArabic.appendChild(transLine);
+
     const optionsContainer = document.getElementById('quizOptions');
-    optionsContainer.innerHTML = '';
-    
+    optionsContainer.replaceChildren();
     q.options.forEach(option => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'quiz-option';
         btn.textContent = option;
-        btn.onclick = () => checkAnswer(option, q.name.meaning[appState.currentLang]);
+        btn.addEventListener('click',
+            () => checkAnswer(option, q.name.meaning[appState.currentLang]));
         optionsContainer.appendChild(btn);
     });
-    
-    document.getElementById('nextQuestion').style.display = 'none';
+
+    const nextBtn = document.getElementById('nextQuestion');
+    nextBtn.classList.add('hidden');
     appState.quizData.answered = false;
 }
 
-// Check quiz answer
 function checkAnswer(selected, correct) {
     if (appState.quizData.answered) return;
-    
+
     appState.quizData.answered = true;
     appState.progress.totalQuestions++;
-    
-    const options = document.querySelectorAll('.quiz-option');
-    options.forEach(opt => {
+
+    document.querySelectorAll('.quiz-option').forEach(opt => {
         if (opt.textContent === correct) {
             opt.classList.add('correct');
         } else if (opt.textContent === selected && selected !== correct) {
             opt.classList.add('incorrect');
         }
-        opt.style.pointerEvents = 'none';
+        opt.disabled = true;
     });
-    
+
     if (selected === correct) {
         appState.quizData.score++;
         appState.progress.totalCorrect++;
     }
-    
+
     saveProgress();
-    document.getElementById('nextQuestion').style.display = 'block';
+    document.getElementById('nextQuestion').classList.remove('hidden');
 }
 
-// Show quiz results
 function showQuizResults() {
     const t = translations[appState.currentLang];
     appState.progress.quizzesTaken++;
     saveProgress();
-    
-    const percentage = Math.round((appState.quizData.score / appState.quizData.questions.length) * 100);
-    let message = '';
-    if (percentage === 100) {
-        message = t.perfectScore;
-    } else if (percentage >= 80) {
-        message = t.excellentScore;
-    } else if (percentage >= 60) {
-        message = t.goodScore;
-    } else {
-        message = t.keepPracticing;
-    }
-    
-    document.querySelector('.quiz-card').innerHTML = `
-        <div class="quiz-results-container">
-            <h2 class="quiz-results-title">${t.quizComplete}</h2>
-            <div class="quiz-result-score">
-                <div class="quiz-results-score-number">
-                    ${appState.quizData.score}/${appState.quizData.questions.length}
-                </div>
-                <div class="quiz-percentage">${percentage}%</div>
-            </div>
-            <p class="quiz-results-message">${message}</p>
-            <button class="btn-nav quiz-results-restart" id="restartQuizBtn">${t.startNewQuiz}</button>
-        </div>
-    `;
-    
-    // Add event listener for restart button
-    document.getElementById('restartQuizBtn').addEventListener('click', () => {
-        startQuiz();
-    });
+
+    const total = appState.quizData.questions.length;
+    const percentage = Math.round((appState.quizData.score / total) * 100);
+    let message = t.keepPracticing;
+    if (percentage === 100) message = t.perfectScore;
+    else if (percentage >= 80) message = t.excellentScore;
+    else if (percentage >= 60) message = t.goodScore;
+
+    const card = document.querySelector('.quiz-card');
+    card.replaceChildren();
+
+    const container = document.createElement('div');
+    container.className = 'quiz-results-container';
+
+    const title = document.createElement('h2');
+    title.className = 'quiz-results-title';
+    title.textContent = t.quizComplete;
+    container.appendChild(title);
+
+    const scoreWrap = document.createElement('div');
+    scoreWrap.className = 'quiz-result-score';
+    const scoreNumber = document.createElement('div');
+    scoreNumber.className = 'quiz-results-score-number';
+    scoreNumber.textContent = `${appState.quizData.score}/${total}`;
+    const pct = document.createElement('div');
+    pct.className = 'quiz-percentage';
+    pct.textContent = `${percentage}%`;
+    scoreWrap.appendChild(scoreNumber);
+    scoreWrap.appendChild(pct);
+    container.appendChild(scoreWrap);
+
+    const messageEl = document.createElement('p');
+    messageEl.className = 'quiz-results-message';
+    messageEl.textContent = message;
+    container.appendChild(messageEl);
+
+    const restart = document.createElement('button');
+    restart.type = 'button';
+    restart.id = 'restartQuizBtn';
+    restart.className = 'btn-nav quiz-results-restart';
+    restart.textContent = t.startNewQuiz;
+    container.appendChild(restart);
+
+    card.appendChild(container);
 }
 
-// Render enhanced progress view
+/* ============================================================
+   progress view
+   ============================================================ */
+
 function renderProgress() {
     const t = translations[appState.currentLang];
-    
-    // Update stat labels with translated text
+
     document.getElementById('learnedLabel').textContent = t.learned;
     document.getElementById('streakLabel').textContent = t.streak;
     document.getElementById('accuracyLabel').textContent = t.accuracy;
     document.getElementById('quizzesLabel').textContent = t.quizzesTaken;
-    
-    document.getElementById('totalLearned').textContent = appState.progress.learned.length;
-    document.getElementById('currentStreak').textContent = appState.progress.dailyStreak;
-    
-    const accuracy = appState.progress.totalQuestions > 0 ? Math.round((appState.progress.totalCorrect / appState.progress.totalQuestions) * 100) : 0;
-    document.getElementById('quizAccuracy').textContent = accuracy + '%';
-    document.getElementById('totalQuizzes').textContent = appState.progress.quizzesTaken;
-    
-    // Add clear progress button if it doesn't exist
+
+    document.getElementById('totalLearned').textContent
+        = appState.progress.learned.length;
+    document.getElementById('currentStreak').textContent
+        = appState.progress.dailyStreak;
+
+    const accuracy = appState.progress.totalQuestions > 0
+        ? Math.round((appState.progress.totalCorrect
+            / appState.progress.totalQuestions) * 100)
+        : 0;
+    document.getElementById('quizAccuracy').textContent = `${accuracy}%`;
+    document.getElementById('totalQuizzes').textContent
+        = appState.progress.quizzesTaken;
+
     const progressView = document.querySelector('.progress-view');
     let clearBtn = progressView.querySelector('.clear-progress-btn');
     if (!clearBtn) {
         clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
         clearBtn.className = 'clear-progress-btn btn-nav';
         clearBtn.textContent = t.clearProgress;
-        clearBtn.onclick = clearAllProgress;
-        
-        const container = document.createElement('div');
-        container.style.textAlign = 'center';
-        container.style.marginTop = '2rem';
-        container.appendChild(clearBtn);
-        
-        progressView.insertBefore(container, progressView.querySelector('.names-grid'));
+        clearBtn.addEventListener('click', clearAllProgress);
+        progressView.insertBefore(clearBtn, progressView.querySelector('.names-grid'));
     } else {
         clearBtn.textContent = t.clearProgress;
     }
-    
-    // Show learned names and favorites
+
     const progressGrid = document.getElementById('progressGrid');
     const fragment = document.createDocumentFragment();
 
-    // Add favorites section
     if (appState.progress.favorites.length > 0) {
-        const favoritesHeader = document.createElement('h3');
-        favoritesHeader.textContent = t.favorites;
-        favoritesHeader.className = 'progress-section-header progress-section-header--favorites';
-        fragment.appendChild(favoritesHeader);
+        const header = document.createElement('h3');
+        header.className = 'progress-section-header progress-section-header--favorites';
+        header.textContent = t.favorites;
+        fragment.appendChild(header);
 
         appState.progress.favorites.forEach(num => {
             const name = namesByNumber.get(num);
-            if (name) {
-                fragment.appendChild(createNameCard(name));
-            }
+            if (name) fragment.appendChild(createNameCard(name));
         });
     }
 
-    // Add learned names section
     if (appState.progress.learned.length > 0) {
-        const learnedHeader = document.createElement('h3');
-        learnedHeader.textContent = t.learned;
-        learnedHeader.className = 'progress-section-header progress-section-header--learned';
-        fragment.appendChild(learnedHeader);
+        const header = document.createElement('h3');
+        header.className = 'progress-section-header progress-section-header--learned';
+        header.textContent = t.learned;
+        fragment.appendChild(header);
 
         appState.progress.learned.forEach(num => {
             const name = namesByNumber.get(num);
@@ -978,34 +1131,63 @@ function renderProgress() {
         });
     }
 
-    progressGrid.innerHTML = '';
-    progressGrid.appendChild(fragment);
+    progressGrid.replaceChildren(fragment);
 }
 
-// Check and show daily name
+/* ============================================================
+   daily-name modal
+   ============================================================ */
+
+let modalReturnFocus = null;
+
+/**
+ * Show the daily name once per calendar day. Index is computed from
+ * day-of-year, so the cycle repeats every 99 days.
+ */
 function checkDailyName() {
     const today = new Date().toDateString();
-    const lastShown = localStorage.getItem('lastDailyName');
-    
-    if (lastShown !== today) {
-        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-        const nameIndex = dayOfYear % namesData.length;
-        const name = namesData[nameIndex];
-        
-        document.getElementById('dailyArabic').textContent = name.arabic;
-        document.getElementById('dailyTransliteration').textContent = name.transliteration;
-        document.getElementById('dailyMeaning').textContent = name.meaning[appState.currentLang];
-        
-        setTimeout(() => {
-            document.getElementById('dailyModal').classList.add('active');
-        }, 1000);
-        
-        localStorage.setItem('lastDailyName', today);
-    }
+    const lastShown = readStorage(STORAGE_KEYS.dailyName);
+    if (lastShown === today) return;
+
+    const startOfYear = new Date(new Date().getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((new Date() - startOfYear) / 86400000);
+    const nameIndex = dayOfYear % namesData.length;
+    const name = namesData[nameIndex];
+
+    document.getElementById('dailyArabic').textContent = name.arabic;
+    document.getElementById('dailyTransliteration').textContent = name.transliteration;
+    document.getElementById('dailyMeaning').textContent = name.meaning[appState.currentLang];
+
+    setTimeout(openDailyModal, 1000);
+    writeStorage(STORAGE_KEYS.dailyName, today);
 }
 
+function openDailyModal() {
+    const modal = document.getElementById('dailyModal');
+    if (!modal) return;
+    modalReturnFocus = document.activeElement;
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    const close = document.getElementById('modalClose');
+    if (close) close.focus();
+}
+
+function closeDailyModal() {
+    const modal = document.getElementById('dailyModal');
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    if (modalReturnFocus && typeof modalReturnFocus.focus === 'function') {
+        modalReturnFocus.focus();
+    }
+    modalReturnFocus = null;
+}
+
+/* ============================================================
+   global hooks (kept for parity with prior public API)
+   ============================================================ */
+
 window.studyName = studyName;
-window.playName = playName;
 window.startQuiz = startQuiz;
 window.clearAllProgress = clearAllProgress;
 window.toggleFavorite = toggleFavorite;
