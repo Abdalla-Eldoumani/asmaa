@@ -3,51 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0f1c" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#faf5e8" media="(prefers-color-scheme: light)">
     <title>Page Not Found - Asmaa</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-green: #059669;
-            --primary-gold: #f59e0b;
-            --accent-green: #10b981;
-            --dark-green: #064e3b;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --card-bg: #ffffff;
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --border-radius: 12px;
-            --border-radius-sm: 8px;
-            --border-radius-lg: 16px;
+            --ink-deep: #faf5e8;
+            --ink-mid: #f2ebd8;
+            --ink-low: #ece3cc;
+            --gold-warm: #a8752e;
+            --gold-deep: #7a4f1a;
+            --gold-glow: rgba(168, 117, 46, 0.12);
+            --ivory: #1a1f2e;
+            --ivory-mute: #4a4738;
+            --ivory-fade: #7a7665;
+            --rule-line: rgba(26, 31, 46, 0.10);
+            --rule-strong: rgba(168, 117, 46, 0.36);
+            --pattern-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23a8752e' stroke-width='0.6'%3E%3Crect x='18' y='18' width='24' height='24'/%3E%3Crect x='18' y='18' width='24' height='24' transform='rotate(45 30 30)'/%3E%3C/g%3E%3C/svg%3E");
+            --pattern-opacity: 0.05;
         }
 
         [data-theme="dark"] {
-            --primary-green: #10b981;
-            --primary-gold: #fbbf24;
-            --accent-green: #34d399;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border-color: #334155;
-            --card-bg: #1e293b;
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --ink-deep: #0a0f1c;
+            --ink-mid: #11192a;
+            --ink-low: #1a2236;
+            --gold-warm: #d4a843;
+            --gold-deep: #a8752e;
+            --gold-glow: rgba(212, 168, 67, 0.16);
+            --ivory: #f5f1e8;
+            --ivory-mute: #c8c2b5;
+            --ivory-fade: #847e72;
+            --rule-line: rgba(245, 241, 232, 0.08);
+            --rule-strong: rgba(212, 168, 67, 0.32);
+            --pattern-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23d4a843' stroke-width='0.6'%3E%3Crect x='18' y='18' width='24' height='24'/%3E%3Crect x='18' y='18' width='24' height='24' transform='rotate(45 30 30)'/%3E%3C/g%3E%3C/svg%3E");
+            --pattern-opacity: 0.04;
         }
 
-        * {
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 1ms !important;
+                transition-duration: 1ms !important;
+            }
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--ink-deep);
+            color: var(--ivory);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -55,147 +66,201 @@
             justify-content: center;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                        color 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
         }
 
-        .container {
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: var(--pattern-url);
+            opacity: var(--pattern-opacity);
+        }
+
+        .frame {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            width: calc(100% - 2rem);
+            margin: 2rem auto;
+            padding: 4rem 2.5rem;
+            background: var(--ink-mid);
+            border: 1px solid var(--rule-line);
+            border-radius: 12px;
             text-align: center;
-            max-width: 520px;
-            padding: 3rem 1.5rem;
+        }
+
+        .frame::before {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            inset: 0;
+            margin: 0.75rem;
+            background:
+                linear-gradient(var(--gold-warm), var(--gold-warm)) top left / 18px 1px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) top left / 1px 18px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) top right / 18px 1px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) top right / 1px 18px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) bottom left / 18px 1px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) bottom left / 1px 18px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) bottom right / 18px 1px no-repeat,
+                linear-gradient(var(--gold-warm), var(--gold-warm)) bottom right / 1px 18px no-repeat;
+            opacity: 0.7;
         }
 
         .arabic-name {
             font-family: 'Amiri', serif;
             font-size: 4rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
+            font-weight: 400;
+            color: var(--gold-warm);
             line-height: 1.4;
+            margin-bottom: 0.5rem;
         }
 
         .transliteration {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
             font-style: italic;
+            font-weight: 500;
+            color: var(--ivory);
             margin-bottom: 0.25rem;
         }
 
         .meaning {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--ivory-fade);
+            margin-bottom: 3rem;
         }
 
         .error-code {
-            font-size: 6rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-gold), #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--gold-warm);
             line-height: 1;
             margin-bottom: 1rem;
+            letter-spacing: 0.04em;
         }
 
         .error-message {
-            font-size: 1.25rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--ivory);
             margin-bottom: 0.5rem;
         }
 
         .error-detail {
             font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
+            color: var(--ivory-mute);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
         }
 
         .home-link {
             display: inline-block;
-            padding: 0.875rem 2rem;
-            background: var(--primary-green);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 2rem;
+            background: transparent;
+            color: var(--ivory);
+            border: 1px solid var(--rule-strong);
+            border-radius: 2px;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.02em;
             text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-lg);
+            min-height: 44px;
+            transition: border-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                        color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .home-link:hover {
-            background: var(--accent-green);
-            transform: translateY(-2px);
+        .home-link:hover,
+        .home-link:focus-visible {
+            border-color: var(--gold-warm);
+            background: var(--gold-glow);
+            color: var(--gold-warm);
+            outline: none;
         }
 
-        .home-link:active {
-            transform: translateY(0);
+        .home-link:focus-visible {
+            box-shadow: 0 0 0 4px var(--gold-glow);
         }
 
         .theme-toggle {
             position: fixed;
             top: 1.5rem;
-            right: 1.5rem;
-            background: var(--dark-green);
-            border: 2px solid var(--primary-gold);
-            color: white;
+            inset-inline-end: 1.5rem;
+            z-index: 10;
+            background: transparent;
+            border: 1px solid var(--rule-strong);
+            color: var(--ivory);
             width: 44px;
             height: 44px;
-            border-radius: var(--border-radius-sm);
+            border-radius: 2px;
             cursor: pointer;
-            font-size: 1.25rem;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.1rem;
+            line-height: 44px;
+            text-align: center;
+            transition: border-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        [data-theme="dark"] .theme-toggle {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
+        .theme-toggle:hover,
+        .theme-toggle:focus-visible {
+            border-color: var(--gold-warm);
+            background: var(--gold-glow);
+            outline: none;
         }
 
-        .theme-toggle:hover {
-            background: var(--accent-green);
-            transform: translateY(-1px);
+        .theme-toggle:focus-visible {
+            box-shadow: 0 0 0 4px var(--gold-glow);
         }
 
         .verse {
             margin-top: 3rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(245, 158, 11, 0.05));
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--primary-green);
-            color: var(--text-secondary);
+            padding: 1.25rem 1.5rem;
+            background: var(--ink-low);
+            border: 1px solid var(--rule-line);
+            border-inline-start: 2px solid var(--gold-warm);
+            border-radius: 6px;
+            color: var(--ivory-mute);
             font-size: 0.9375rem;
             line-height: 1.8;
+            text-align: start;
         }
 
-        [data-theme="dark"] .verse {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(245, 158, 11, 0.1));
+        .verse cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-size: 0.8125rem;
+            color: var(--ivory-fade);
+            letter-spacing: 0.04em;
         }
 
-        @media (max-width: 768px) {
-            .arabic-name {
-                font-size: 3rem;
+        @media (max-width: 600px) {
+            .frame {
+                padding: 3rem 1.25rem;
+                margin: 1rem auto;
             }
-
-            .error-code {
-                font-size: 4.5rem;
-            }
-
-            .container {
-                padding: 2rem 1rem;
-            }
+            .arabic-name { font-size: 3rem; }
+            .transliteration { font-size: 1.25rem; }
+            .error-code { font-size: 3.5rem; }
+            .error-message { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
-    <div class="container">
-        <div class="arabic-name">الهادي</div>
+    <main class="frame">
+        <div class="arabic-name arabic-text" aria-hidden="true">الهادي</div>
         <div class="transliteration">Al-Hadi</div>
         <div class="meaning">The Guide</div>
 
@@ -203,25 +268,38 @@
         <div class="error-message">This page does not exist.</div>
         <div class="error-detail">The path you followed leads nowhere, but the way back is clear.</div>
 
-        <a href="/" class="home-link">Return Home</a>
+        <a href="/" class="home-link">Return home</a>
 
-        <div class="verse">
-            "And Allah invites to the Home of Peace and guides whom He wills to a straight path." — Quran 10:25
-        </div>
-    </div>
+        <blockquote class="verse">
+            "And Allah invites to the Home of Peace and guides whom He wills to a straight path."
+            <cite>Quran 10:25</cite>
+        </blockquote>
+    </main>
 
     <script>
         (function () {
-            var theme = localStorage.getItem('asmaaTheme') || 'light';
+            var stored = null;
+            try {
+                stored = localStorage.getItem('asmaaTheme');
+            } catch (err) {
+                stored = null;
+            }
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = stored === 'light' || stored === 'dark' ? stored : (prefersDark ? 'dark' : 'light');
             document.body.setAttribute('data-theme', theme);
-            document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+            var toggle = document.getElementById('themeToggle');
+            toggle.textContent = theme === 'light' ? '🌙' : '☀️';
 
-            document.getElementById('themeToggle').addEventListener('click', function () {
+            toggle.addEventListener('click', function () {
                 var current = document.body.getAttribute('data-theme');
                 var next = current === 'light' ? 'dark' : 'light';
                 document.body.setAttribute('data-theme', next);
-                localStorage.setItem('asmaaTheme', next);
-                this.textContent = next === 'light' ? '🌙' : '☀️';
+                try {
+                    localStorage.setItem('asmaaTheme', next);
+                } catch (err) {
+                    /* private mode or storage unavailable; ignore */
+                }
+                toggle.textContent = next === 'light' ? '🌙' : '☀️';
             });
         })();
     </script>
