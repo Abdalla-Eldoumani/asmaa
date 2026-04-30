@@ -3,84 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0f1c" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#faf5e8" media="(prefers-color-scheme: light)">
     <title>Asmaa - Learn the 99 Beautiful Names of Allah</title>
-    <meta name="description" content="Learn and memorize the 99 Beautiful Names of Allah with meanings in Arabic, English, and French">
+    <meta name="description" content="Learn and memorize the 99 Beautiful Names of Allah with meanings in Arabic, English, and French.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="pattern-bg"></div>
-    
-    <header class="header">
+    <a class="visually-hidden" href="#main-content">Skip to content</a>
+
+    <header class="header" role="banner">
         <div class="header-content">
             <div class="app-title">
                 <span>Asmaa</span>
-                <span class="arabic-title arabic-text">أسماء</span>
+                <span class="arabic-title arabic-text" aria-hidden="true">أسماء</span>
             </div>
             <div class="controls">
-                <select class="language-selector" id="languageSelector">
+                <label class="visually-hidden" for="languageSelector">Language</label>
+                <select class="language-selector" id="languageSelector" aria-label="Language">
                     <option value="en">English</option>
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
                 </select>
-                <button class="theme-toggle" id="themeToggle">🌙</button>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
             </div>
         </div>
     </header>
 
-    <nav class="nav-tabs">
-        <button class="nav-tab active" data-view="browse">Browse</button>
-        <button class="nav-tab" data-view="study">Study</button>
-        <button class="nav-tab" data-view="quiz">Quiz</button>
-        <button class="nav-tab" data-view="progress">Progress</button>
+    <nav class="nav-tabs" role="tablist" aria-label="Sections">
+        <button class="nav-tab active" type="button" role="tab" data-view="browse" aria-selected="true">Browse</button>
+        <button class="nav-tab" type="button" role="tab" data-view="study" aria-selected="false">Study</button>
+        <button class="nav-tab" type="button" role="tab" data-view="quiz" aria-selected="false">Quiz</button>
+        <button class="nav-tab" type="button" role="tab" data-view="progress" aria-selected="false">Progress</button>
     </nav>
 
-    <div class="container">
-        <!-- Browse View -->
-        <div class="browse-view view-content">
+    <main class="container" id="main-content">
+        <section class="browse-view view-content" role="tabpanel" aria-label="Browse names">
             <div class="search-container">
-                <input type="text" class="search-bar" id="searchBar" placeholder="Search by name, meaning, or number...">
+                <label class="visually-hidden" for="searchBar">Search names</label>
+                <input type="search" class="search-bar" id="searchBar" placeholder="Search by name, meaning, or number" aria-label="Search names">
             </div>
             <div class="names-grid" id="namesGrid"></div>
-        </div>
+        </section>
 
-        <!-- Study View -->
-        <div class="study-view view-content">
-            <div class="study-card">
+        <section class="study-view view-content" role="tabpanel" aria-label="Study a name">
+            <article class="study-card">
                 <div class="study-arabic arabic-text" id="studyArabic"></div>
                 <div class="study-transliteration" id="studyTransliteration"></div>
                 <div class="study-meaning" id="studyMeaning"></div>
                 <div class="study-reflection" id="studyReflection"></div>
                 <div class="study-nav">
-                    <button class="btn-nav" id="prevName">Previous</button>
-                    <button class="btn-nav" id="playAudio">🔊 Play</button>
-                    <button class="btn-nav" id="nextName">Next</button>
+                    <button class="btn-nav" id="prevName" type="button">Previous</button>
+                    <button class="btn-nav" id="playAudio" type="button">🔊 Play</button>
+                    <button class="btn-nav" id="nextName" type="button">Next</button>
                 </div>
-            </div>
-        </div>
+            </article>
+        </section>
 
-        <!-- Quiz View -->
-        <div class="quiz-view view-content">
-            <div class="quiz-card">
+        <section class="quiz-view view-content" role="tabpanel" aria-label="Quiz">
+            <article class="quiz-card">
                 <div class="quiz-progress">
-                    <div class="progress-bar">
+                    <div class="progress-bar" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                         <div class="progress-fill" id="quizProgress"></div>
                     </div>
-                    <div style="text-align: center; margin-top: 0.5rem; color: var(--text-secondary);" id="questionCounter">
-                        Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
-                    </div>
+                    <div class="question-counter" id="questionCounter" aria-live="polite"></div>
                 </div>
                 <div class="quiz-question" id="quizQuestion"></div>
                 <div class="quiz-arabic-display arabic-text" id="quizArabic"></div>
-                <div class="quiz-options" id="quizOptions"></div>
-                <button class="btn-nav" id="nextQuestion" style="margin-top: 1rem; width: 100%; display: none;">Next Question</button>
-            </div>
-        </div>
+                <div class="quiz-options" id="quizOptions" role="group" aria-label="Answer options"></div>
+                <button class="btn-nav hidden" id="nextQuestion" type="button" style="margin-top: 1rem; width: 100%;">Next Question</button>
+            </article>
+        </section>
 
-        <!-- Progress View -->
-        <div class="progress-view view-content">
+        <section class="progress-view view-content" role="tabpanel" aria-label="Progress">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value" id="totalLearned">0</div>
@@ -100,20 +98,19 @@
                 </div>
             </div>
             <div class="names-grid" id="progressGrid"></div>
-        </div>
-    </div>
+        </section>
+    </main>
 
-    <!-- Daily Name Modal -->
-    <div class="modal" id="dailyModal">
+    <div class="modal" id="dailyModal" role="dialog" aria-modal="true" aria-labelledby="dailyModalTitle" aria-hidden="true">
         <div class="modal-content">
-            <button class="modal-close" id="modalClose">×</button>
-            <div class="daily-name-header">Today's Name to Remember</div>
+            <button class="modal-close" id="modalClose" type="button" aria-label="Close">&times;</button>
+            <div class="daily-name-header" id="dailyModalTitle">Today's Name to Remember</div>
             <div class="study-arabic arabic-text" id="dailyArabic"></div>
             <div class="study-transliteration" id="dailyTransliteration"></div>
             <div class="study-meaning" id="dailyMeaning"></div>
         </div>
     </div>
+
     <script src="script.js" type="module"></script>
-    <script src="names.js" type="module"></script>
 </body>
 </html>
